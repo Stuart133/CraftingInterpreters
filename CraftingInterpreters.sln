@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31129.286
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CraftingInterpreters", "CraftingInterpreters\CraftingInterpreters.csproj", "{4C4ABB81-50D6-4C6F-BA4B-CF01E10E7647}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LoxDotNet", "LoxDotNet\LoxDotNet.csproj", "{3877E46D-1894-4789-A0FA-3EE242E01CBC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{4C4ABB81-50D6-4C6F-BA4B-CF01E10E7647}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4C4ABB81-50D6-4C6F-BA4B-CF01E10E7647}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4C4ABB81-50D6-4C6F-BA4B-CF01E10E7647}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4C4ABB81-50D6-4C6F-BA4B-CF01E10E7647}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3877E46D-1894-4789-A0FA-3EE242E01CBC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3877E46D-1894-4789-A0FA-3EE242E01CBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3877E46D-1894-4789-A0FA-3EE242E01CBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3877E46D-1894-4789-A0FA-3EE242E01CBC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
