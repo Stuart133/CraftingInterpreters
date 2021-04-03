@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LoxDotNet.Scanning;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -28,10 +29,15 @@ namespace LoxDotNet
             return 0;
         }
 
+        internal static void Error(int line, string message)
+        {
+            Report(line, "", message);
+        }
+
         private static void Run(string source)
         {
-            Scanner scanner = new Scanner(source);
-            List<Token> tokens = scanner.scanTokens();
+            var scanner = new Scanner(source);
+            List<Token> tokens = scanner.ScanTokens();
 
             // For now, just print the tokens
             foreach (var token in tokens)
@@ -64,11 +70,6 @@ namespace LoxDotNet
                 Run(line);
                 HadError = false;
             }
-        }
-
-        private static void Error(int line, string message)
-        {
-            Report(line, "", message);
         }
 
         private static void Report(int line, string where, string message)

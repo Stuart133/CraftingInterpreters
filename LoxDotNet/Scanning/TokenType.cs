@@ -1,4 +1,4 @@
-﻿namespace LoxDotNet.Scanner
+﻿namespace LoxDotNet.Scanning
 {
     internal enum TokenType
     {
