@@ -1,0 +1,5 @@
+fun main()
+{
+  // Line comment here
+  print "Hello world!"
+}

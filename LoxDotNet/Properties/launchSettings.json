@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "LoxDotNet": {
+      "commandName": "Project",
+      "commandLineArgs": ".\\LoxScripts\\hello_world.lox",
+      "workingDirectory": "C:\\Users\\Stuart\\source\\repos\\CraftingInterpreters"
+    },
+    "LoxDotNetREPL": {
+      "commandName": "Project"
+    }
+  }
+}
