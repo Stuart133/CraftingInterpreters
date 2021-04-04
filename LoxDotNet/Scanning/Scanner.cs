@@ -171,7 +171,7 @@ namespace LoxDotNet.Scanning
 
         private void AddToken(TokenType type, object literal)
         {
-            var text = _source.Substring(_start, _current);
+            var text = _source[_start.._current];
             _tokens.Add(new Token(type, text, literal, _line));
         }
 
@@ -196,7 +196,7 @@ namespace LoxDotNet.Scanning
             Advance();
 
             // Trim the quotes
-            var value = _source.Substring(_start + 1, _current - 1);
+            var value = _source[(_start + 1)..(_current - 1)];
             AddToken(STRING, value);
         }
 
@@ -218,7 +218,7 @@ namespace LoxDotNet.Scanning
                 }
             }
 
-            AddToken(NUMBER, double.Parse(_source.Substring(_start, _current)));
+            AddToken(NUMBER, double.Parse(_source[_start.._current]));
         }
 
         private void Identifier()
@@ -228,7 +228,7 @@ namespace LoxDotNet.Scanning
                 Advance();
             }
 
-            var text = _source.Substring(_start, _current);
+            var text = _source[_start.._current];
             var reserverd = ReservedIdentifiers.Identifiers.TryGetValue(text, out var type);
             if (!reserverd)
             {
