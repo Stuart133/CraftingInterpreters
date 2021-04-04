@@ -65,6 +65,10 @@ namespace LoxDotNet.Scanning
                             Advance();
                         }
                     }
+                    else if (Match('*'))
+                    {
+                        BlockComment();
+                    }
                     else
                     {
                         AddToken(SLASH);
@@ -173,6 +177,31 @@ namespace LoxDotNet.Scanning
         {
             var text = _source[_start.._current];
             _tokens.Add(new Token(type, text, literal, _line));
+        }
+
+        private void BlockComment()
+        {
+            // For now don't handle nested block comments
+            while (Peek() != '*' && PeekNext() != '/' && !IsAtEnd())
+            {
+                // Increment the line if we hit a newline char
+                if (Peek() == '\n')
+                {
+                    _line++;
+                }
+
+                Advance();
+            }
+
+            if (IsAtEnd())
+            {
+                Lox.Error(_line, "Unclosed block comment");
+                return;
+            }
+
+            // Advance over the final */
+            Advance();
+            Advance();
         }
 
         private void String()
