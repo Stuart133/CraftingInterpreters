@@ -84,7 +84,18 @@ namespace LoxDotNet.Scanning
                 case '"': String(); break;
 
                 default:
-                    Lox.Error(_line, "Unexpected character.");
+                    if (IsDigit(c))
+                    {
+                        Number();
+                    }
+                    else if (IsAlpha(c))
+                    {
+                        Identifier();
+                    }
+                    else
+                    {
+                        Lox.Error(_line, "Unexpected character.");
+                    }
                     break;
             }
         }
@@ -92,6 +103,23 @@ namespace LoxDotNet.Scanning
         private bool IsAtEnd()
         {
             return _current >= _source.Length;
+        }
+
+        private bool IsDigit(char c)
+        {
+            return c >= '0' && c <= '9';
+        }
+
+        private bool IsAlpha(char c)
+        {
+            return (c >= 'a' && c <= 'z') ||
+                (c >= 'A' && c <= 'Z') ||
+                c == '_';
+        }
+
+        private bool IsAlphaNumeric(char c)
+        {
+            return IsAlpha(c) || IsDigit(c);
         }
 
         private char Advance()
@@ -107,6 +135,16 @@ namespace LoxDotNet.Scanning
             }
 
             return _source[_current];
+        }
+
+        private char PeekNext()
+        {
+            if (_current + 1 >= _source.Length)
+            {
+                return '\0';
+            }
+
+            return _source[_current + 1];
         }
 
         private bool Match(char expected)
@@ -160,6 +198,44 @@ namespace LoxDotNet.Scanning
             // Trim the quotes
             var value = _source.Substring(_start + 1, _current - 1);
             AddToken(STRING, value);
+        }
+
+        private void Number()
+        {
+            // Keep going until the next character is not a digit
+            while (IsDigit(Peek()))
+            {
+                Advance();
+            }
+
+            if (Peek() == '.' && IsDigit(PeekNext()))
+            {
+                // Consume the . and continue to the end of the number
+                Advance();
+                while (IsDigit(Peek()))
+                {
+                    Advance();
+                }
+            }
+
+            AddToken(NUMBER, double.Parse(_source.Substring(_start, _current)));
+        }
+
+        private void Identifier()
+        {
+            while (IsAlphaNumeric(Peek()))
+            {
+                Advance();
+            }
+
+            var text = _source.Substring(_start, _current);
+            var reserverd = ReservedIdentifiers.Identifiers.TryGetValue(text, out var type);
+            if (!reserverd)
+            {
+                type = IDENTIFIER;
+            }
+
+            AddToken(type);
         }
     }
 }
