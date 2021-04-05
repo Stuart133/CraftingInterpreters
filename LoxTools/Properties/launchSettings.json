@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "LoxTools": {
+      "commandName": "Project",
+      "commandLineArgs": ".\\Parsing",
+      "workingDirectory": "C:\\Users\\Stuart\\source\\repos\\CraftingInterpreters\\LoxDotNet"
+    }
+  }
+}

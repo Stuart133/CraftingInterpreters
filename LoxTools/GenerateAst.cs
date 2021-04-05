@@ -9,14 +9,14 @@ namespace LoxTools
     {
         static int Main(string[] args)
         {
-            //if (args.Length != 1)
-            //{
-            //    Console.Error.WriteLine("Usage: generate_ast <output directory");
-            //    return 64;
-            //}
+            if (args.Length != 1)
+            {
+                Console.Error.WriteLine("Usage: generate_ast <output directory");
+                return 64;
+            }
 
-            // var outputDir = args[0];
-            DefineAst("", "Expr", new string[]
+            var outputDir = args[0];
+            DefineAst(outputDir, "Expr", new string[]
             {
                 "Binary     : Expr left, Token operator, Expr right",
                 "Grouping   : Expr expression",
@@ -49,8 +49,7 @@ namespace LoxTools
 
             stringBuilder.AppendLine("\t}");
             stringBuilder.AppendLine("}");
-            Console.WriteLine(stringBuilder.ToString());
-            //File.WriteAllText(path, stringBuilder.ToString());
+            File.WriteAllText(path, stringBuilder.ToString());
         }
 
         private static void DefineType(StringBuilder stringBuilder, string baseName, string className, string fieldList)
