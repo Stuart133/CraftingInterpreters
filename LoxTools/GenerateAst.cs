@@ -9,14 +9,14 @@ namespace LoxTools
     {
         static int Main(string[] args)
         {
-            if (args.Length != 1)
-            {
-                Console.Error.WriteLine("Usage: generate_ast <output directory");
-                return 64;
-            }
+            //if (args.Length != 1)
+            //{
+            //    Console.Error.WriteLine("Usage: generate_ast <output directory");
+            //    return 64;
+            //}
 
-            var outputDir = args[0];
-            DefineAst(outputDir, "Expr", new string[]
+            // var outputDir = args[0];
+            DefineAst("", "Expr", new string[]
             {
                 "Binary     : Expr left, Token operator, Expr right",
                 "Grouping   : Expr expression",
@@ -49,7 +49,8 @@ namespace LoxTools
 
             stringBuilder.AppendLine("\t}");
             stringBuilder.AppendLine("}");
-            File.WriteAllText(path, stringBuilder.ToString());
+            Console.WriteLine(stringBuilder.ToString());
+            //File.WriteAllText(path, stringBuilder.ToString());
         }
 
         private static void DefineType(StringBuilder stringBuilder, string baseName, string className, string fieldList)
@@ -58,15 +59,14 @@ namespace LoxTools
             stringBuilder.AppendLine("\t\t{");
 
             // Constructor
-            stringBuilder.AppendLine($"\t\t\tinternal {className}{fieldList})");
+            stringBuilder.AppendLine($"\t\t\tinternal {className}({fieldList})");
             stringBuilder.AppendLine("\t\t\t{");
 
             // Store parameters in properties
             foreach (var field in fieldList.Split(", "))
             {
                 var name = field.Split(' ')[1];
-                var captializedName = $"{char.ToUpper(name[0])}{name[1..]}";
-                stringBuilder.AppendLine($"\t\t\t\t{captializedName} = {name};");
+                stringBuilder.AppendLine($"\t\t\t\tthis.{name} = {name};");
             }
             stringBuilder.AppendLine("\t\t\t}");
             stringBuilder.AppendLine();
@@ -74,12 +74,11 @@ namespace LoxTools
             // Properties
             foreach (var field in fieldList.Split(", "))
             {
-                var name = field.Split(' ')[1];
-                var captializedName = $"{char.ToUpper(name[0])}{name[1..]}";
-                stringBuilder.AppendLine($"\t\t\t\tinternal {field} {{ get; }}");
+                stringBuilder.AppendLine($"\t\t\tinternal {field} {{ get; }}");
             }
 
             stringBuilder.AppendLine("\t\t}");
+            stringBuilder.AppendLine();
         }
     }
 }
