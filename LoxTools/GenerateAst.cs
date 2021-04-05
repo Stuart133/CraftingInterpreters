@@ -39,9 +39,47 @@ namespace LoxTools
             stringBuilder.AppendLine($"\tabstract class {baseName}");
             stringBuilder.AppendLine("\t{");
 
+            // Create the sub classes
+            foreach (var type in types)
+            {
+                var className = type.Split(':')[0].Trim();
+                var fields = type.Split(':')[1].Trim();
+                DefineType(stringBuilder, baseName, className, fields);
+            }
+
             stringBuilder.AppendLine("\t}");
             stringBuilder.AppendLine("}");
             File.WriteAllText(path, stringBuilder.ToString());
+        }
+
+        private static void DefineType(StringBuilder stringBuilder, string baseName, string className, string fieldList)
+        {
+            stringBuilder.AppendLine($"\t\tclass {className} : {baseName}");
+            stringBuilder.AppendLine("\t\t{");
+
+            // Constructor
+            stringBuilder.AppendLine($"\t\t\tinternal {className}{fieldList})");
+            stringBuilder.AppendLine("\t\t\t{");
+
+            // Store parameters in properties
+            foreach (var field in fieldList.Split(", "))
+            {
+                var name = field.Split(' ')[1];
+                var captializedName = $"{char.ToUpper(name[0])}{name[1..]}";
+                stringBuilder.AppendLine($"\t\t\t\t{captializedName} = {name};");
+            }
+            stringBuilder.AppendLine("\t\t\t}");
+            stringBuilder.AppendLine();
+
+            // Properties
+            foreach (var field in fieldList.Split(", "))
+            {
+                var name = field.Split(' ')[1];
+                var captializedName = $"{char.ToUpper(name[0])}{name[1..]}";
+                stringBuilder.AppendLine($"\t\t\t\tinternal {field} {{ get; }}");
+            }
+
+            stringBuilder.AppendLine("\t\t}");
         }
     }
 }

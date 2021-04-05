@@ -4,7 +4,6 @@ namespace LoxDotNet.Parsing
 {
     abstract class Expr
     {
-
         class Binary : Expr
         {
             internal Expr Left { get; }
