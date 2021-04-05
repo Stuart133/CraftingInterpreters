@@ -18,10 +18,10 @@ namespace LoxTools
             var outputDir = args[0];
             DefineAst(outputDir, "Expr", new string[]
             {
-                "Binary     : Expr left, Token operator, Expr right",
+                "Binary     : Expr left, Token op, Expr right",
                 "Grouping   : Expr expression",
-                "Literal    : Object value",
-                "Unary      : Token operator, Expr right"
+                "Literal    : object value",
+                "Unary      : Token op, Expr right"
             });
 
             return 0;
