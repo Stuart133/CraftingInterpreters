@@ -39,7 +39,7 @@ namespace LoxTools
             builder.AppendLine();
             builder.AppendLine("namespace LoxDotNet.Parsing");
             builder.AppendLine("{");
-            builder.AppendLine($"\tabstract class {baseName}");
+            builder.AppendLine($"\tpublic abstract class {baseName}");
             builder.AppendLine("\t{");
 
             // Create the visitor interface
@@ -64,13 +64,13 @@ namespace LoxTools
 
         private static void DefineVisitor(StringBuilder builder, string baseName, IEnumerable<string> types)
         {
-            builder.AppendLine("\t\tinternal interface IVisitor<T>");
+            builder.AppendLine("\t\tpublic interface IVisitor<T>");
             builder.AppendLine("\t\t{");
 
             foreach (var type in types)
             {
                 var typeName = type.Split(':')[0].Trim();
-                builder.AppendLine($"\t\t\tinternal T Visit{typeName}{baseName}({typeName} {baseName.ToLower()});");
+                builder.AppendLine($"\t\t\tT Visit{typeName}{baseName}({typeName} {baseName.ToLower()});");
             }
 
             builder.AppendLine("\t\t}");
@@ -78,7 +78,7 @@ namespace LoxTools
 
         private static void DefineType(StringBuilder builder, string baseName, string className, string fieldList)
         {
-            builder.AppendLine($"\t\tinternal class {className} : {baseName}");
+            builder.AppendLine($"\t\tpublic class {className} : {baseName}");
             builder.AppendLine("\t\t{");
 
             // Constructor

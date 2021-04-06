@@ -4,17 +4,17 @@ using LoxDotNet.Scanning;
 
 namespace LoxDotNet.Parsing
 {
-	abstract class Expr
+	public abstract class Expr
 	{
-		internal interface IVisitor<T>
+		public interface IVisitor<T>
 		{
-			internal T VisitBinaryExpr(Binary expr);
-			internal T VisitGroupingExpr(Grouping expr);
-			internal T VisitLiteralExpr(Literal expr);
-			internal T VisitUnaryExpr(Unary expr);
+			T VisitBinaryExpr(Binary expr);
+			T VisitGroupingExpr(Grouping expr);
+			T VisitLiteralExpr(Literal expr);
+			T VisitUnaryExpr(Unary expr);
 		}
 
-		internal class Binary : Expr
+		public class Binary : Expr
 		{
 			internal Binary(Expr left, Token op, Expr right)
 			{
@@ -33,7 +33,7 @@ namespace LoxDotNet.Parsing
 			internal Expr right { get; }
 		}
 
-		internal class Grouping : Expr
+		public class Grouping : Expr
 		{
 			internal Grouping(Expr expression)
 			{
@@ -48,7 +48,7 @@ namespace LoxDotNet.Parsing
 			internal Expr expression { get; }
 		}
 
-		internal class Literal : Expr
+		public class Literal : Expr
 		{
 			internal Literal(object value)
 			{
@@ -63,7 +63,7 @@ namespace LoxDotNet.Parsing
 			internal object value { get; }
 		}
 
-		internal class Unary : Expr
+		public class Unary : Expr
 		{
 			internal Unary(Token op, Expr right)
 			{
