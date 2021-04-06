@@ -2,22 +2,22 @@
 {
     class Token
     {
-        internal TokenType _type;
-        internal string _lexeme;
-        internal object _literal;
-        internal int _line;
+        internal TokenType Type { get; }
+        internal string Lexeme { get; }
+        internal object Literal { get; }
+        internal int Line { get; }
 
         internal Token(TokenType type, string lexeme, object literal, int line)
         {
-            _type = type;
-            _lexeme = lexeme;
-            _literal = literal;
-            _line = line;
+            Type = type;
+            Lexeme = lexeme;
+            Literal = literal;
+            Line = line;
         }
 
         public override string ToString()
         {
-            return $"{_type} {_lexeme} {_literal}";
+            return $"{Type} {Lexeme} {Literal}";
         }
     }
 }
