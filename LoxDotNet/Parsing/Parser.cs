@@ -123,7 +123,12 @@ namespace LoxDotNet.Parsing
 
         private Expr Expression()
         {
-            return Equality();
+            return Comma();
+        }
+
+        private Expr Comma()
+        {
+            return BinaryExpr(Equality, COMMA);
         }
 
         private Expr Equality()
