@@ -1,4 +1,5 @@
-﻿using LoxDotNet.Scanning;
+﻿using LoxDotNet.Parsing;
+using LoxDotNet.Scanning;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -34,10 +35,18 @@ namespace LoxDotNet
             var scanner = new Scanner(source);
             List<Token> tokens = scanner.ScanTokens();
 
-            // For now, just print the tokens
-            foreach (var token in tokens)
+            var parser = new Parser(tokens);
+            var expression = parser.Parse();
+
+            // Stop if there was a syntax error
+            if (HadError)
             {
-                Console.WriteLine(token);
+                return;
+            }
+
+            if (expression != null)
+            {
+                Console.WriteLine(new AstPrinter().Print(expression));
             }
         }
 
@@ -76,7 +85,7 @@ namespace LoxDotNet
         {
             if (token.Type == TokenType.EOF)
             {
-                Report(token.Line, "at end", message);
+                Report(token.Line, " at end", message);
             }
             else
             {
