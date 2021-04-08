@@ -29,11 +29,6 @@ namespace LoxDotNet
             return 0;
         }
 
-        internal static void Error(int line, string message)
-        {
-            Report(line, "", message);
-        }
-
         private static void Run(string source)
         {
             var scanner = new Scanner(source);
@@ -69,6 +64,23 @@ namespace LoxDotNet
                 }
                 Run(line);
                 HadError = false;
+            }
+        }
+
+        internal static void Error(int line, string message)
+        {
+            Report(line, "", message);
+        }
+
+        internal static void Error(Token token, string message)
+        {
+            if (token.Type == TokenType.EOF)
+            {
+                Report(token.Line, "at end", message);
+            }
+            else
+            {
+                Report(token.Line, $" at '{token.Lexeme}'", message);
             }
         }
 

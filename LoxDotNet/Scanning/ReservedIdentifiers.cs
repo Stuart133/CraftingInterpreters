@@ -14,7 +14,7 @@ namespace LoxDotNet.Scanning
             { "for", FOR },
             { "fun", FUN },
             { "if", IF },
-            { "nil", NIL },
+            { "nil", NULL },
             { "or", OR },
             { "print", PRINT },
             { "return", RETURN },
