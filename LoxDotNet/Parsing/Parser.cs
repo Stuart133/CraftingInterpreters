@@ -15,6 +15,18 @@ namespace LoxDotNet.Parsing
             _tokens = tokens;
         }
 
+        internal Expr Parse()
+        {
+            try
+            {
+                return Expression();
+            }
+            catch (ParseException)
+            { 
+                return null; 
+            }
+        }
+
         private bool Match(params TokenType[] types)
         {
             foreach (var tokenType in types)
@@ -74,10 +86,39 @@ namespace LoxDotNet.Parsing
             return Peek().Type == EOF;
         }
 
-        private ParseError Error(Token token, string message)
+        private static ParseException Error(Token token, string message)
         {
             Lox.Error(token, message);
-            return new ParseError();
+            return new ParseException();
+        }
+
+        private void Synchronize()
+        {
+            Advance();
+
+            // Advance until we find what's probably the next statement
+            while (!IsAtEnd())
+            {
+                if (Previous().Type == SEMICOLON)
+                {
+                    return;
+                }
+
+                switch (Peek().Type)
+                {
+                    case CLASS:
+                    case FUN:
+                    case VAR:
+                    case FOR:
+                    case IF:
+                    case WHILE:
+                    case PRINT:
+                    case RETURN:
+                        return;
+                }
+
+                Advance();
+            }
         }
 
         private Expr Expression()
@@ -134,6 +175,8 @@ namespace LoxDotNet.Parsing
                 Consume(RIGHT_PAREN, "Expect ')' after expression.");
                 return new Expr.Grouping(expr);
             }
+
+            return null;
         }
 
         private Expr BinaryExpr(Func<Expr> operandMethod, params TokenType[] matchTokenTypes)
