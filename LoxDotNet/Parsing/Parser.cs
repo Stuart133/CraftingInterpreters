@@ -196,7 +196,33 @@ namespace LoxDotNet.Parsing
                 return new Expr.Grouping(expr);
             }
 
-            return null;
+            // Error productions
+            if (Match(BANG_EQUAL, EQUAL_EQUAL))
+            {
+                Error(Previous(), "Missing left hand operand");
+                Equality();
+                return null;
+            }
+            if (Match(GREATER, GREATER_EQUAL, LESS, LESS_EQUAL))
+            {
+                Error(Previous(), "Missing left hand operand");
+                Comparison();
+                return null;
+            }
+            if (Match(PLUS))
+            {
+                Error(Previous(), "Missing left hand operand");
+                Term();
+                return null;
+            }
+            if (Match(SLASH, STAR))
+            {
+                Error(Previous(), "Missing left hand operand");
+                Factor();
+                return null;
+            }
+
+            throw Error(Peek(), "Expected expression");
         }
 
         private Expr BinaryExpr(Func<Expr> operandMethod, params TokenType[] matchTokenTypes)
