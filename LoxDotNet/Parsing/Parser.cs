@@ -128,7 +128,22 @@ namespace LoxDotNet.Parsing
 
         private Expr Comma()
         {
-            return BinaryExpr(Equality, COMMA);
+            return BinaryExpr(Conditional, COMMA);
+        }
+
+        private Expr Conditional()
+        {
+            var ifExpr = Equality();
+
+            if (Match(QUESTION))
+            {
+                var thenExpr = Expression();
+                Consume(COLON, "Expect ':' after then branch of conditional expression.");
+                var elseExpr = Conditional();
+                return new Expr.Conditional(ifExpr, thenExpr, elseExpr);
+            }
+
+            return ifExpr;
         }
 
         private Expr Equality()

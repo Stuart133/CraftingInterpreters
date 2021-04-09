@@ -34,6 +34,11 @@ namespace LoxDotNet.Parsing
             return Parenthesize(expr.op.Lexeme, expr.right);
         }
 
+        public string VisitConditionalExpr(Expr.Conditional expr)
+        {
+            return Parenthesize("conditional", expr.ifExpr, expr.thenBranch, expr.elseBranch);
+        }
+
         private string Parenthesize(string name, params Expr[] exprs)
         {
             var builder = new StringBuilder();
