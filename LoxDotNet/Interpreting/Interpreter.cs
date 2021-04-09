@@ -28,18 +28,7 @@ namespace LoxDotNet.Interpreting
             switch (expr.op.Type)
             {
                 case PLUS:
-                    if (left is double ld && right is double rd)
-                    {
-                        return ld + rd;
-                    }
-                    else if (left is string ls && right is string rs)
-                    {
-                        return ls + rs;
-                    }
-                    else
-                    {
-                        throw new RuntimeException(expr.op, "Operands must be two numbers or two strings");
-                    }                    
+                    return StringOrDouble((l, r) => l + r, (l, r) => l + r, left, right, expr.op);
                 case MINUS:
                     CheckNumberOperands(expr.op, left, right);
                     return (double)left - (double)right;
@@ -137,6 +126,21 @@ namespace LoxDotNet.Interpreting
             }
 
             return a.Equals(b);
+        }
+
+        private static object StringOrDouble(Func<double, double, object> doubleFunc, Func<string, string, object> stringFunc, object left, object right, Token op)
+        {
+            if (left is double ld && right is double rd)
+            {
+                return doubleFunc(ld, rd);
+            }
+
+            if (left is string ls && right is string rs)
+            {
+                return stringFunc(ls, rs);
+            }
+
+            throw new RuntimeException(op, "Operands must be two numbers or two strings");
         }
 
         private static void CheckNumberOperand(Token op, object operand)
