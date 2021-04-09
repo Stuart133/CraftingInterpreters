@@ -44,6 +44,8 @@ namespace LoxDotNet.Scanning
                 case '+': AddToken(PLUS); break;
                 case ';': AddToken(SEMICOLON); break;
                 case '*': AddToken(STAR); break;
+                case ':': AddToken(COLON); break;
+                case '?': AddToken(QUESTION); break;
                 case '!':
                     AddToken(Match('=') ? BANG_EQUAL : BANG);
                     break;
