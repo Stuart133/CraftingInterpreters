@@ -19,6 +19,7 @@ namespace LoxTools
             DefineAst(outputDir, "Expr", new string[]
             {
                 "Binary     : Expr left, Token op, Expr right",
+                "Conditional: Expr ifExpr, Expr thenBranch, Expr elseBranch",
                 "Grouping   : Expr expression",
                 "Literal    : object value",
                 "Unary      : Token op, Expr right"

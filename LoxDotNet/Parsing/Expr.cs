@@ -9,6 +9,7 @@ namespace LoxDotNet.Parsing
 		public interface IVisitor<T>
 		{
 			T VisitBinaryExpr(Binary expr);
+			T VisitConditionalExpr(Conditional expr);
 			T VisitGroupingExpr(Grouping expr);
 			T VisitLiteralExpr(Literal expr);
 			T VisitUnaryExpr(Unary expr);
@@ -31,6 +32,25 @@ namespace LoxDotNet.Parsing
 			internal Expr left { get; }
 			internal Token op { get; }
 			internal Expr right { get; }
+		}
+
+		public class Conditional : Expr
+		{
+			internal Conditional(Expr ifExpr, Expr thenBranch, Expr elseBranch)
+			{
+				this.ifExpr = ifExpr;
+				this.thenBranch = thenBranch;
+				this.elseBranch = elseBranch;
+			}
+
+			internal override T Accept<T>(IVisitor<T> visitor)
+			{
+				return visitor.VisitConditionalExpr(this);
+			}
+
+			internal Expr ifExpr { get; }
+			internal Expr thenBranch { get; }
+			internal Expr elseBranch { get; }
 		}
 
 		public class Grouping : Expr
