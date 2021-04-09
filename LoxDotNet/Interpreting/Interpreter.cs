@@ -1,4 +1,5 @@
 ﻿using LoxDotNet.Parsing;
+using LoxDotNet.Scanning;
 using static LoxDotNet.Scanning.TokenType;
 
 namespace LoxDotNet.Interpreting
@@ -23,21 +24,28 @@ namespace LoxDotNet.Interpreting
                     }
                     else
                     {
-                        return null;
+                        throw new RuntimeException(expr.op, "Operands must be two numbers or two strings");
                     }                    
                 case MINUS:
+                    CheckNumberOperands(expr.op, left, right);
                     return (double)left - (double)right;
                 case SLASH:
+                    CheckNumberOperands(expr.op, left, right);
                     return (double)left / (double)right;
                 case STAR:
+                    CheckNumberOperands(expr.op, left, right);
                     return (double)left * (double)right;
                 case GREATER:
+                    CheckNumberOperands(expr.op, left, right);
                     return (double)left > (double)right;
                 case GREATER_EQUAL:
+                    CheckNumberOperands(expr.op, left, right);
                     return (double)left >= (double)right;
                 case LESS:
+                    CheckNumberOperands(expr.op, left, right);
                     return (double)left < (double)right;
                 case LESS_EQUAL:
+                    CheckNumberOperands(expr.op, left, right);
                     return (double)left <= (double)right;
                 case BANG_EQUAL:
                     return !IsEqual(left, right);
@@ -74,12 +82,16 @@ namespace LoxDotNet.Interpreting
         {
             var right = Evaluate(expr.right);
 
-            return expr.op.Type switch
+            switch (expr.op.Type)
             {
-                MINUS => -(double)right,
-                BANG => !IsTruthy(right),
-                _ => null,
-            };
+                case MINUS:
+                    CheckNumberOperand(expr.op, right);
+                    return -(double)right;
+                case BANG:
+                    return !IsTruthy(right);
+                default:
+                    return null;
+            }
         }
 
         private object Evaluate(Expr expr)
@@ -87,7 +99,7 @@ namespace LoxDotNet.Interpreting
             return expr.Accept(this);
         }
 
-        private bool IsTruthy(object value)
+        private static bool IsTruthy(object value)
         {
             // Use ruby like truthy semantics
             return value switch
@@ -98,7 +110,7 @@ namespace LoxDotNet.Interpreting
             };
         }
 
-        private bool IsEqual(object a, object b)
+        private static bool IsEqual(object a, object b)
         {
             if (a is null && b is null)
             {
@@ -111,6 +123,22 @@ namespace LoxDotNet.Interpreting
             }
 
             return a.Equals(b);
+        }
+
+        private static void CheckNumberOperand(Token op, object operand)
+        {
+            if (operand is not double)
+            {
+                throw new RuntimeException(op, "Operand must be a number");
+            }    
+        }
+
+        private static void CheckNumberOperands(Token op, object left, object right)
+        {
+            if (left is not double || right is not double)
+            {
+                throw new RuntimeException(op, "Operands must be numbers");
+            }    
         }
     }
 }
