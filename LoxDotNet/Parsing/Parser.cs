@@ -27,100 +27,6 @@ namespace LoxDotNet.Parsing
             }
         }
 
-        private bool Match(params TokenType[] types)
-        {
-            foreach (var tokenType in types)
-            {
-                if (Check(tokenType))
-                {
-                    Advance();
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        private bool Check(TokenType type)
-        {
-            if (IsAtEnd())
-            {
-                return false;
-            }
-
-            return Peek().Type == type;
-        }
-
-        private Token Advance()
-        {
-            if (!IsAtEnd())
-            {
-                _current++;
-            }
-
-            return Previous();
-        }
-
-        private Token Peek()
-        {
-            return _tokens[_current];
-        }
-
-        private Token Previous()
-        {
-            return _tokens[_current - 1];
-        }
-
-        private Token Consume(TokenType type, string message)
-        {
-            if (Check(type))
-            {
-                return Advance();
-            }
-
-            throw Error(Peek(), message);
-        }
-
-        private bool IsAtEnd()
-        {
-            return Peek().Type == EOF;
-        }
-
-        private static ParseException Error(Token token, string message)
-        {
-            Lox.Error(token, message);
-            return new ParseException();
-        }
-
-        private void Synchronize()
-        {
-            Advance();
-
-            // Advance until we find what's probably the next statement
-            while (!IsAtEnd())
-            {
-                if (Previous().Type == SEMICOLON)
-                {
-                    return;
-                }
-
-                switch (Peek().Type)
-                {
-                    case CLASS:
-                    case FUN:
-                    case VAR:
-                    case FOR:
-                    case IF:
-                    case WHILE:
-                    case PRINT:
-                    case RETURN:
-                        return;
-                }
-
-                Advance();
-            }
-        }
-
         private Expr Expression()
         {
             return Comma();
@@ -237,6 +143,100 @@ namespace LoxDotNet.Parsing
             }
 
             return expr;
+        }
+
+        private bool Match(params TokenType[] types)
+        {
+            foreach (var tokenType in types)
+            {
+                if (Check(tokenType))
+                {
+                    Advance();
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private bool Check(TokenType type)
+        {
+            if (IsAtEnd())
+            {
+                return false;
+            }
+
+            return Peek().Type == type;
+        }
+
+        private Token Advance()
+        {
+            if (!IsAtEnd())
+            {
+                _current++;
+            }
+
+            return Previous();
+        }
+
+        private Token Peek()
+        {
+            return _tokens[_current];
+        }
+
+        private Token Previous()
+        {
+            return _tokens[_current - 1];
+        }
+
+        private Token Consume(TokenType type, string message)
+        {
+            if (Check(type))
+            {
+                return Advance();
+            }
+
+            throw Error(Peek(), message);
+        }
+
+        private bool IsAtEnd()
+        {
+            return Peek().Type == EOF;
+        }
+
+        private static ParseException Error(Token token, string message)
+        {
+            Lox.Error(token, message);
+            return new ParseException();
+        }
+
+        private void Synchronize()
+        {
+            Advance();
+
+            // Advance until we find what's probably the next statement
+            while (!IsAtEnd())
+            {
+                if (Previous().Type == SEMICOLON)
+                {
+                    return;
+                }
+
+                switch (Peek().Type)
+                {
+                    case CLASS:
+                    case FUN:
+                    case VAR:
+                    case FOR:
+                    case IF:
+                    case WHILE:
+                    case PRINT:
+                    case RETURN:
+                        return;
+                }
+
+                Advance();
+            }
         }
     }
 }

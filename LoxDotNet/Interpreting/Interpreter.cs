@@ -1,11 +1,25 @@
 ﻿using LoxDotNet.Parsing;
 using LoxDotNet.Scanning;
+using System;
 using static LoxDotNet.Scanning.TokenType;
 
 namespace LoxDotNet.Interpreting
 {
     class Interpreter : Expr.IVisitor<object>
     {
+        public void Interpret(Expr expression)
+        {
+            try
+            {
+                var value = Evaluate(expression);
+                Console.WriteLine(Stringify(value));
+            }
+            catch (RuntimeException ex)
+            {
+                Lox.RuntimeError(ex);
+            }
+        }
+
         public object VisitBinaryExpr(Expr.Binary expr)
         {
             var left = Evaluate(expr.left);
@@ -139,6 +153,26 @@ namespace LoxDotNet.Interpreting
             {
                 throw new RuntimeException(op, "Operands must be numbers");
             }    
+        }
+
+        private static string Stringify(object value)
+        {
+            if (value is null)
+            {
+                return "nil";
+            }
+
+            if (value is double)
+            {
+                var text = value.ToString();
+                if (text.EndsWith(".0"))
+                {
+                    text = text.Substring(0, text.Length - 2);
+                }
+                return text;
+            }
+
+            return value.ToString();
         }
     }
 }

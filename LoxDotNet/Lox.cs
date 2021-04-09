@@ -1,4 +1,5 @@
-﻿using LoxDotNet.Parsing;
+﻿using LoxDotNet.Interpreting;
+using LoxDotNet.Parsing;
 using LoxDotNet.Scanning;
 using System;
 using System.Collections.Generic;
@@ -9,7 +10,9 @@ namespace LoxDotNet
 {
     class Lox
     {
-        private static bool HadError { get; set; } = false;
+        private static readonly Interpreter _interpreter = new Interpreter();
+        private static bool _hadError = false;
+        private static bool _hadRuntimeError = false;
 
         static int Main(string[] args)
         {
@@ -39,15 +42,12 @@ namespace LoxDotNet
             var expression = parser.Parse();
 
             // Stop if there was a syntax error
-            if (HadError)
+            if (_hadError)
             {
                 return;
             }
 
-            if (expression != null)
-            {
-                Console.WriteLine(new AstPrinter().Print(expression));
-            }
+            _interpreter.Interpret(expression);
         }
 
         private static void RunFile(string path)
@@ -55,9 +55,14 @@ namespace LoxDotNet
             var bytes = File.ReadAllBytes(path);
             Run(Encoding.Default.GetString(bytes));
 
-            if (HadError)
+            if (_hadError)
             {
                 Environment.Exit(65);
+            }
+
+            if (_hadRuntimeError)
+            {
+                Environment.Exit(70);
             }
         }
 
@@ -72,7 +77,7 @@ namespace LoxDotNet
                     break;
                 }
                 Run(line);
-                HadError = false;
+                _hadError = false;
             }
         }
 
@@ -93,10 +98,16 @@ namespace LoxDotNet
             }
         }
 
+        internal static void RuntimeError(RuntimeException error)
+        {
+            Console.Error.WriteLine($"{error.Message}\n[line {error.Token.Line}]");
+            _hadRuntimeError = true;
+        }
+
         private static void Report(int line, string where, string message)
         {
             Console.Error.WriteLine($"[line {line}] Error{where}: {message}");
-            HadError = true;
+            _hadError = true;
         }
     }
 }

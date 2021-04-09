@@ -5,7 +5,7 @@ namespace LoxDotNet.Interpreting
 {
     public class RuntimeException : Exception
     {
-        Token Token { get; }
+        internal Token Token { get; }
 
         internal RuntimeException(Token token, string message)
             : base(message)
