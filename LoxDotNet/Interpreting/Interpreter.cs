@@ -31,6 +31,18 @@ namespace LoxDotNet.Interpreting
                     return (double)left / (double)right;
                 case STAR:
                     return (double)left * (double)right;
+                case GREATER:
+                    return (double)left > (double)right;
+                case GREATER_EQUAL:
+                    return (double)left >= (double)right;
+                case LESS:
+                    return (double)left < (double)right;
+                case LESS_EQUAL:
+                    return (double)left <= (double)right;
+                case BANG_EQUAL:
+                    return !IsEqual(left, right);
+                case EQUAL_EQUAL:
+                    return IsEqual(left, right);
                 default:
                     return null;
             }
@@ -38,7 +50,14 @@ namespace LoxDotNet.Interpreting
 
         public object VisitConditionalExpr(Expr.Conditional expr)
         {
-            throw new System.NotImplementedException();
+            if (IsTruthy(Evaluate(expr.ifExpr)))
+            {
+                return Evaluate(expr.thenBranch);
+            }
+            else
+            {
+                return Evaluate(expr.elseBranch);
+            }
         }
 
         public object VisitGroupingExpr(Expr.Grouping expr)
@@ -77,6 +96,21 @@ namespace LoxDotNet.Interpreting
                 null => false,
                 _ => true,
             };
+        }
+
+        private bool IsEqual(object a, object b)
+        {
+            if (a is null && b is null)
+            {
+                return true;
+            }
+
+            if (a is null)
+            {
+                return false;
+            }
+
+            return a.Equals(b);
         }
     }
 }
