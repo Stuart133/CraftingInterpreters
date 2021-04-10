@@ -25,6 +25,12 @@ namespace LoxTools
                 "Unary      : Token op, Expr right"
             });
 
+            DefineAst(outputDir, "Stmt", new string[]
+            {
+                "Expression : Expr expression",
+                "Print      : Expr expression"
+            });
+
             return 0;
         }
 
