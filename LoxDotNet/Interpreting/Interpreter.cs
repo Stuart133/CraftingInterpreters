@@ -8,6 +8,8 @@ namespace LoxDotNet.Interpreting
 {
     class Interpreter : Expr.IVisitor<object>, Stmt.IVisitor<object>
     {
+        private Environment _environment = new Environment();
+
         public void Interpret(List<Stmt> statements)
         {
             try
@@ -84,6 +86,11 @@ namespace LoxDotNet.Interpreting
             return expr.value;
         }
 
+        public object VisitVariableExpr(Expr.Variable expr)
+        {
+            return _environment.Get(expr.name);
+        }
+
         public object VisitUnaryExpr(Expr.Unary expr)
         {
             var right = Evaluate(expr.right);
@@ -110,6 +117,18 @@ namespace LoxDotNet.Interpreting
         {
             var value = Evaluate(stmt.expression);
             Console.WriteLine(Stringify(value));
+            return null;
+        }
+
+        public object VisitVarStmt(Stmt.Var stmt)
+        {
+            object value = null;
+            if (stmt.initializer is not null)
+            {
+                value = Evaluate(stmt.initializer);
+            }
+
+            _environment.Define(stmt.name.Lexeme, value);
             return null;
         }
 

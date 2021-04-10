@@ -57,12 +57,12 @@ namespace LoxDotNet
 
             if (_hadError)
             {
-                Environment.Exit(65);
+                System.Environment.Exit(65);
             }
 
             if (_hadRuntimeError)
             {
-                Environment.Exit(70);
+                System.Environment.Exit(70);
             }
         }
 

@@ -41,6 +41,11 @@ namespace LoxDotNet.Parsing
             return Parenthesize(expr.op.Lexeme, expr.right);
         }
 
+        public string VisitVariableExpr(Expr.Variable expr)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public string VisitConditionalExpr(Expr.Conditional expr)
         {
             return Parenthesize("conditional", expr.ifExpr, expr.thenBranch, expr.elseBranch);
@@ -54,6 +59,11 @@ namespace LoxDotNet.Parsing
         public string VisitPrintStmt(Stmt.Print stmt)
         {
             return Parenthesize("print", stmt.expression);
+        }
+
+        public string VisitVarStmt(Stmt.Var stmt)
+        {
+            throw new System.NotImplementedException();
         }
 
         private string Parenthesize(string name, params Expr[] exprs)
