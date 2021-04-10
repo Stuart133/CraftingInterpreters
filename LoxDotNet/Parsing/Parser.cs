@@ -15,16 +15,40 @@ namespace LoxDotNet.Parsing
             _tokens = tokens;
         }
 
-        internal Expr Parse()
+        internal List<Stmt> Parse()
         {
-            try
+            var statements = new List<Stmt>();
+
+            while (!IsAtEnd())
             {
-                return Expression();
+                statements.Add(Statement());
             }
-            catch (ParseException)
-            { 
-                return null; 
+
+            return statements;
+        }
+
+        private Stmt Statement()
+        {
+            if (Match(PRINT))
+            {
+                return PrintStatement();
             }
+
+            return ExpressionStatement();
+        }
+
+        private Stmt ExpressionStatement()
+        {
+            var expr = Expression();
+            Consume(SEMICOLON, "Expect ';' after expression");
+            return new Stmt.Expression(expr);
+        }
+
+        private Stmt PrintStatement()
+        {
+            var value = Expression();
+            Consume(SEMICOLON, "Expect ';' after value");
+            return new Stmt.Print(value);
         }
 
         private Expr Expression()
