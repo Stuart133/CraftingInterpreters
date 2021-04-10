@@ -22,13 +22,15 @@ namespace LoxTools
                 "Conditional: Expr ifExpr, Expr thenBranch, Expr elseBranch",
                 "Grouping   : Expr expression",
                 "Literal    : object value",
+                "Variable   : Token name",
                 "Unary      : Token op, Expr right"
             });
 
             DefineAst(outputDir, "Stmt", new string[]
             {
                 "Expression : Expr expression",
-                "Print      : Expr expression"
+                "Print      : Expr expression",
+                "Var        : Token name, Expr initializer"
             });
 
             return 0;
