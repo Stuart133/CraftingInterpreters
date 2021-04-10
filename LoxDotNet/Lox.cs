@@ -39,7 +39,7 @@ namespace LoxDotNet
             List<Token> tokens = scanner.ScanTokens();
 
             var parser = new Parser(tokens);
-            var expression = parser.Parse();
+            var statements = parser.Parse();
 
             // Stop if there was a syntax error
             if (_hadError)
@@ -47,7 +47,7 @@ namespace LoxDotNet
                 return;
             }
 
-            _interpreter.Interpret(expression);
+            _interpreter.Interpret(statements);
         }
 
         private static void RunFile(string path)

@@ -1,12 +1,19 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 
 namespace LoxDotNet.Parsing
 {
-    public class AstPrinter : Expr.IVisitor<string>
+    public class AstPrinter : Expr.IVisitor<string>, Stmt.IVisitor<string>
     {
-        public string Print(Expr expr)
+        public IEnumerable<string> Print(List<Stmt> statements)
         {
-            return expr.Accept(this);
+            var output = new List<string>();
+            foreach(var statement in statements)
+            {
+                output.Add(statement.Accept(this));
+            }
+
+            return output;
         }
 
         public string VisitBinaryExpr(Expr.Binary expr)
@@ -37,6 +44,16 @@ namespace LoxDotNet.Parsing
         public string VisitConditionalExpr(Expr.Conditional expr)
         {
             return Parenthesize("conditional", expr.ifExpr, expr.thenBranch, expr.elseBranch);
+        }
+
+        public string VisitExpressionStmt(Stmt.Expression stmt)
+        {
+            return stmt.expression.Accept(this);
+        }
+
+        public string VisitPrintStmt(Stmt.Print stmt)
+        {
+            return Parenthesize("print", stmt.expression);
         }
 
         private string Parenthesize(string name, params Expr[] exprs)
