@@ -1,18 +1,21 @@
 ﻿using LoxDotNet.Parsing;
 using LoxDotNet.Scanning;
 using System;
+using System.Collections.Generic;
 using static LoxDotNet.Scanning.TokenType;
 
 namespace LoxDotNet.Interpreting
 {
-    class Interpreter : Expr.IVisitor<object>
+    class Interpreter : Expr.IVisitor<object>, Stmt.IVisitor<object>
     {
-        public void Interpret(Expr expression)
+        public void Interpret(List<Stmt> statements)
         {
             try
             {
-                var value = Evaluate(expression);
-                Console.WriteLine(Stringify(value));
+                foreach(var statement in statements)
+                {
+                    Execute(statement);
+                }
             }
             catch (RuntimeException ex)
             {
@@ -95,6 +98,24 @@ namespace LoxDotNet.Interpreting
                 default:
                     return null;
             }
+        }
+
+        public object VisitExpressionStmt(Stmt.Expression stmt)
+        {
+            Evaluate(stmt.expression);
+            return null;
+        }
+
+        public object VisitPrintStmt(Stmt.Print stmt)
+        {
+            var value = Evaluate(stmt.expression);
+            Console.WriteLine(Stringify(value));
+            return null;
+        }
+
+        private void Execute(Stmt stmt)
+        {
+            stmt.Accept(this);
         }
 
         private object Evaluate(Expr expr)
