@@ -25,6 +25,11 @@ namespace LoxDotNet.Interpreting
             }
         }
 
+        public object VisitAssignExpr(Expr.Assign expr)
+        {
+            throw new NotImplementedException();
+        }
+
         public object VisitBinaryExpr(Expr.Binary expr)
         {
             var left = Evaluate(expr.left);

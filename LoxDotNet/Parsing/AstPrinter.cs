@@ -16,6 +16,11 @@ namespace LoxDotNet.Parsing
             return output;
         }
 
+        public string VisitAssignExpr(Expr.Assign expr)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public string VisitBinaryExpr(Expr.Binary expr)
         {
             return Parenthesize(expr.op.Lexeme, expr.left, expr.right);
@@ -43,7 +48,7 @@ namespace LoxDotNet.Parsing
 
         public string VisitVariableExpr(Expr.Variable expr)
         {
-            throw new System.NotImplementedException();
+            return expr.name.Lexeme;
         }
 
         public string VisitConditionalExpr(Expr.Conditional expr)
@@ -63,7 +68,7 @@ namespace LoxDotNet.Parsing
 
         public string VisitVarStmt(Stmt.Var stmt)
         {
-            throw new System.NotImplementedException();
+            return Parenthesize($"define {stmt.name.Lexeme}", stmt.initializer);
         }
 
         private string Parenthesize(string name, params Expr[] exprs)
