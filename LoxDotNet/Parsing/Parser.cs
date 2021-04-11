@@ -85,7 +85,28 @@ namespace LoxDotNet.Parsing
 
         private Expr Expression()
         {
-            return Comma();
+            return Assignment();
+        }
+
+        private Expr Assignment()
+        {
+            var expr = Comma();
+
+            if (Match(EQUAL))
+            {
+                var equals = Previous();
+                var value = Assignment();
+
+                if (expr is Expr.Variable varExpr)
+                {
+                    var name = varExpr.name;
+                    return new Expr.Assign(name, value);
+                }
+
+                Error(equals, "Invalid assignment target");
+            }
+
+            return expr;
         }
 
         private Expr Comma()
