@@ -8,12 +8,30 @@ namespace LoxDotNet.Parsing
 	{
 		public interface IVisitor<T>
 		{
+			T VisitAssignExpr(Assign expr);
 			T VisitBinaryExpr(Binary expr);
 			T VisitConditionalExpr(Conditional expr);
 			T VisitGroupingExpr(Grouping expr);
 			T VisitLiteralExpr(Literal expr);
 			T VisitVariableExpr(Variable expr);
 			T VisitUnaryExpr(Unary expr);
+		}
+
+		public class Assign : Expr
+		{
+			internal Assign(Token name, Expr value)
+			{
+				this.name = name;
+				this.value = value;
+			}
+
+			internal override T Accept<T>(IVisitor<T> visitor)
+			{
+				return visitor.VisitAssignExpr(this);
+			}
+
+			internal Token name { get; }
+			internal Expr value { get; }
 		}
 
 		public class Binary : Expr

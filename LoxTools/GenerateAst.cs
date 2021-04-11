@@ -18,6 +18,7 @@ namespace LoxTools
             var outputDir = args[0];
             DefineAst(outputDir, "Expr", new string[]
             {
+                "Assign     : Token name, Expr value",
                 "Binary     : Expr left, Token op, Expr right",
                 "Conditional: Expr ifExpr, Expr thenBranch, Expr elseBranch",
                 "Grouping   : Expr expression",
