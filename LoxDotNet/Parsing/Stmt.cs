@@ -1,6 +1,7 @@
 // This file is auto generated from LoxTools - Do not modify directly
 
 using LoxDotNet.Scanning;
+using System.Collections.Generic;
 
 namespace LoxDotNet.Parsing
 {
@@ -8,9 +9,25 @@ namespace LoxDotNet.Parsing
 	{
 		public interface IVisitor<T>
 		{
+			T VisitBlockStmt(Block stmt);
 			T VisitExpressionStmt(Expression stmt);
 			T VisitPrintStmt(Print stmt);
 			T VisitVarStmt(Var stmt);
+		}
+
+		public class Block : Stmt
+		{
+			internal Block(List<Stmt> statements)
+			{
+				this.statements = statements;
+			}
+
+			internal override T Accept<T>(IVisitor<T> visitor)
+			{
+				return visitor.VisitBlockStmt(this);
+			}
+
+			internal List<Stmt> statements { get; }
 		}
 
 		public class Expression : Stmt

@@ -18,6 +18,9 @@ namespace LoxTools
             var outputDir = args[0];
             DefineAst(outputDir, "Expr", new string[]
             {
+                "LoxDotNet.Scanning"
+            }, new string[]
+            {
                 "Assign     : Token name, Expr value",
                 "Binary     : Expr left, Token op, Expr right",
                 "Conditional: Expr ifExpr, Expr thenBranch, Expr elseBranch",
@@ -29,6 +32,12 @@ namespace LoxTools
 
             DefineAst(outputDir, "Stmt", new string[]
             {
+                "LoxDotNet.Scanning",
+                "System.Collections.Generic"
+            }
+            , new string[]
+            {
+                "Block      : List<Stmt> statements",
                 "Expression : Expr expression",
                 "Print      : Expr expression",
                 "Var        : Token name, Expr initializer"
@@ -37,7 +46,7 @@ namespace LoxTools
             return 0;
         }
 
-        private static void DefineAst(string outputDir, string baseName, IEnumerable<string> types)
+        private static void DefineAst(string outputDir, string baseName, IEnumerable<string> usings, IEnumerable<string> types)
         {
             var path = $"{outputDir}/{baseName}.cs";
             var builder = new StringBuilder();
@@ -45,7 +54,12 @@ namespace LoxTools
             builder.AppendLine("// This file is auto generated from LoxTools - Do not modify directly");
             builder.AppendLine();
 
-            builder.AppendLine("using LoxDotNet.Scanning;");
+            // Add usings
+            foreach(var use in usings)
+            {
+                builder.AppendLine($"using {use};");
+            }
+
             builder.AppendLine();
             builder.AppendLine("namespace LoxDotNet.Parsing");
             builder.AppendLine("{");
