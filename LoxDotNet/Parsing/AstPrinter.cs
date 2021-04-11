@@ -40,7 +40,7 @@ namespace LoxDotNet.Parsing
 
             if (expr.value is string)
             {
-                return $"\"{expr.value.ToString()}\"";
+                return $"\"{expr.value}\"";
             }
 
             return expr.value.ToString();
@@ -63,7 +63,16 @@ namespace LoxDotNet.Parsing
 
         public string VisitBlockStmt(Stmt.Block stmt)
         {
-            return "";
+            var builder = new StringBuilder();
+            builder.AppendLine("(");
+
+            foreach (var statement in stmt.statements)
+            {
+                builder.AppendLine($"\t{statement.Accept(this)}");
+            }
+            builder.AppendLine(")");
+
+            return builder.ToString();
         }
 
         public string VisitExpressionStmt(Stmt.Expression stmt)
