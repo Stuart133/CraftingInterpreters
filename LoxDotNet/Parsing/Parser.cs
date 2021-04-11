@@ -85,12 +85,17 @@ namespace LoxDotNet.Parsing
 
         private Expr Expression()
         {
-            return Assignment();
+            return Comma();
+        }
+
+        private Expr Comma()
+        {
+            return BinaryExpr(Assignment, COMMA);
         }
 
         private Expr Assignment()
         {
-            var expr = Comma();
+            var expr = Conditional();
 
             if (Match(EQUAL))
             {
@@ -107,11 +112,6 @@ namespace LoxDotNet.Parsing
             }
 
             return expr;
-        }
-
-        private Expr Comma()
-        {
-            return BinaryExpr(Conditional, COMMA);
         }
 
         private Expr Conditional()

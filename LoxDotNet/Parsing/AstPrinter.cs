@@ -18,7 +18,7 @@ namespace LoxDotNet.Parsing
 
         public string VisitAssignExpr(Expr.Assign expr)
         {
-            throw new System.NotImplementedException();
+            return Parenthesize($"set {expr.name.Lexeme}", expr.value);
         }
 
         public string VisitBinaryExpr(Expr.Binary expr)

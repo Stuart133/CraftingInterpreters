@@ -12,6 +12,17 @@ namespace LoxDotNet.Interpreting
             _values[name] = value;
         }
 
+        internal void Assign(Token name, object value)
+        {
+            if (_values.ContainsKey(name.Lexeme))
+            {
+                _values[name.Lexeme] = value;
+                return;
+            }
+
+            throw new RuntimeException(name, $"Undefined variable '{name.Lexeme}'.");
+        }
+
         internal object Get(Token name)
         {
             if (_values.TryGetValue(name.Lexeme, out var value))

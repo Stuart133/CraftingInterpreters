@@ -27,7 +27,9 @@ namespace LoxDotNet.Interpreting
 
         public object VisitAssignExpr(Expr.Assign expr)
         {
-            throw new NotImplementedException();
+            var value = Evaluate(expr.value);
+            _environment.Assign(expr.name, value);
+            return value;
         }
 
         public object VisitBinaryExpr(Expr.Binary expr)
@@ -64,6 +66,8 @@ namespace LoxDotNet.Interpreting
                     return !IsEqual(left, right);
                 case EQUAL_EQUAL:
                     return IsEqual(left, right);
+                case COMMA:
+                    return right;
                 default:
                     return null;
             }
