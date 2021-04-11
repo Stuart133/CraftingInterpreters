@@ -38,6 +38,11 @@ namespace LoxDotNet.Parsing
                 return "null";
             }
 
+            if (expr.value is string)
+            {
+                return $"\"{expr.value.ToString()}\"";
+            }
+
             return expr.value.ToString();
         }
 
