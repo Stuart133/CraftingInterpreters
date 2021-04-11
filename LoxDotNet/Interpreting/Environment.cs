@@ -5,7 +5,13 @@ namespace LoxDotNet.Interpreting
 {
     class Environment
     {
+        private readonly Environment _enclosing;
         private readonly Dictionary<string, object> _values = new Dictionary<string, object>();
+
+        public Environment(Environment environment = null)
+        {
+            _enclosing = environment;
+        }
 
         internal void Define(string name, object value)
         {
@@ -20,6 +26,12 @@ namespace LoxDotNet.Interpreting
                 return;
             }
 
+            if (_enclosing is not null)
+            {
+                _enclosing.Assign(name, value);
+                return;
+            }
+
             throw new RuntimeException(name, $"Undefined variable '{name.Lexeme}'.");
         }
 
@@ -28,6 +40,10 @@ namespace LoxDotNet.Interpreting
             if (_values.TryGetValue(name.Lexeme, out var value))
             {
                 return value;
+            }
+
+            {
+                return _enclosing.Get(name);
             }
 
             throw new RuntimeException(name, $"Undefined variable '{name.Lexeme}'.");
