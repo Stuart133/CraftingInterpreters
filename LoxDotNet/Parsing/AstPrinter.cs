@@ -56,6 +56,11 @@ namespace LoxDotNet.Parsing
             return Parenthesize("conditional", expr.ifExpr, expr.thenBranch, expr.elseBranch);
         }
 
+        public string VisitBlockStmt(Stmt.Block stmt)
+        {
+            return "";
+        }
+
         public string VisitExpressionStmt(Stmt.Expression stmt)
         {
             return stmt.expression.Accept(this);

@@ -116,6 +116,12 @@ namespace LoxDotNet.Interpreting
             }
         }
 
+        public object VisitBlockStmt(Stmt.Block stmt)
+        {
+            ExecuteBlock(stmt.statements, new Environment(_environment));
+            return null;
+        }
+
         public object VisitExpressionStmt(Stmt.Expression stmt)
         {
             Evaluate(stmt.expression);
@@ -144,6 +150,23 @@ namespace LoxDotNet.Interpreting
         private void Execute(Stmt stmt)
         {
             stmt.Accept(this);
+        }
+
+        private void ExecuteBlock(List<Stmt> statements, Environment environment)
+        {
+            var previous = _environment;
+            try
+            {
+                _environment = environment;
+                foreach (var stmt in statements)
+                {
+                    Execute(stmt);
+                }
+            }
+            finally
+            {
+                _environment = previous;
+            }
         }
 
         private object Evaluate(Expr expr)

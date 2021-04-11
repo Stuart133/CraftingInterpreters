@@ -66,6 +66,11 @@ namespace LoxDotNet.Parsing
                 return PrintStatement();
             }
 
+            if (Match(LEFT_BRACE))
+            {
+                return new Stmt.Block(Block());
+            }
+
             return ExpressionStatement();
         }
 
@@ -81,6 +86,19 @@ namespace LoxDotNet.Parsing
             var value = Expression();
             Consume(SEMICOLON, "Expect ';' after value");
             return new Stmt.Print(value);
+        }
+
+        private List<Stmt> Block()
+        {
+            var statements = new List<Stmt>();
+
+            while (!Check(RIGHT_BRACE) && !IsAtEnd())
+            {
+                statements.Add(Declaration());
+            }
+
+            Consume(RIGHT_BRACE, "Expect '}' after block.");
+            return statements;
         }
 
         private Expr Expression()

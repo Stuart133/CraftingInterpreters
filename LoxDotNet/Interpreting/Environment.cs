@@ -42,6 +42,7 @@ namespace LoxDotNet.Interpreting
                 return value;
             }
 
+            if (_enclosing is not null)
             {
                 return _enclosing.Get(name);
             }
