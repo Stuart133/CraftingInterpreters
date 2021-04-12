@@ -136,6 +136,20 @@ namespace LoxDotNet.Interpreting
             return null;
         }
 
+        public object VisitIfStmt(Stmt.If stmt)
+        {
+            if (IsTruthy(stmt.condition))
+            {
+                Execute(stmt.thenBranch);
+            }
+            else if (stmt.elseBranch is not null)
+            {
+                Execute(stmt.elseBranch);
+            }
+
+            return null;
+        }
+
         public object VisitPrintStmt(Stmt.Print stmt)
         {
             var value = Evaluate(stmt.expression);

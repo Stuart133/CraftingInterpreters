@@ -86,6 +86,11 @@ namespace LoxDotNet.Parsing
             return stmt.expression.Accept(this);
         }
 
+        public string VisitIfStmt(Stmt.If stmt)
+        {
+            throw new System.Exception();
+        }
+
         public string VisitPrintStmt(Stmt.Print stmt)
         {
             return Parenthesize("print", stmt.expression);

@@ -11,6 +11,7 @@ namespace LoxDotNet.Parsing
 		{
 			T VisitBlockStmt(Block stmt);
 			T VisitExpressionStmt(Expression stmt);
+			T VisitIfStmt(If stmt);
 			T VisitPrintStmt(Print stmt);
 			T VisitVarStmt(Var stmt);
 		}
@@ -43,6 +44,25 @@ namespace LoxDotNet.Parsing
 			}
 
 			internal Expr expression { get; }
+		}
+
+		public class If : Stmt
+		{
+			internal If(Expr condition, Stmt thenBranch, Stmt elseBranch)
+			{
+				this.condition = condition;
+				this.thenBranch = thenBranch;
+				this.elseBranch = elseBranch;
+			}
+
+			internal override T Accept<T>(IVisitor<T> visitor)
+			{
+				return visitor.VisitIfStmt(this);
+			}
+
+			internal Expr condition { get; }
+			internal Stmt thenBranch { get; }
+			internal Stmt elseBranch { get; }
 		}
 
 		public class Print : Stmt

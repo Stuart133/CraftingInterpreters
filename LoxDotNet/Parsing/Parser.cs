@@ -61,6 +61,11 @@ namespace LoxDotNet.Parsing
 
         private Stmt Statement()
         {
+            if (Match(IF))
+            {
+                return IfStatement();
+            }
+
             if (Match(PRINT))
             {
                 return PrintStatement();
@@ -72,6 +77,23 @@ namespace LoxDotNet.Parsing
             }
 
             return ExpressionStatement();
+        }
+
+        private Stmt IfStatement()
+        {
+            Consume(LEFT_PAREN, "Expect '(' after 'if'.");
+            var condition = Expression();
+            Consume(RIGHT_PAREN, "Expect ')' after if condition");
+
+            var thenBranch = Statement();
+            Stmt elseBranch = null;
+
+            if (Match(ELSE))
+            {
+                elseBranch = Statement();
+            }
+
+            return new Stmt.If(condition, thenBranch, elseBranch);
         }
 
         private Stmt ExpressionStatement()
