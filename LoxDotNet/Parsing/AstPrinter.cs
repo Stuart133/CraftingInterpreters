@@ -5,6 +5,8 @@ namespace LoxDotNet.Parsing
 {
     public class AstPrinter : Expr.IVisitor<string>, Stmt.IVisitor<string>
     {
+        private int _nestLevel = 0;
+
         public IEnumerable<string> Print(List<Stmt> statements)
         {
             var output = new List<string>();
@@ -64,13 +66,17 @@ namespace LoxDotNet.Parsing
         public string VisitBlockStmt(Stmt.Block stmt)
         {
             var builder = new StringBuilder();
-            builder.AppendLine("(");
+            builder.AppendLine("{");
 
+            _nestLevel++;
             foreach (var statement in stmt.statements)
             {
-                builder.AppendLine($"\t{statement.Accept(this)}");
+                builder.AppendLine($"{new string('\t', _nestLevel)}{statement.Accept(this)}");
             }
-            builder.AppendLine(")");
+            _nestLevel--;
+
+            // TODO: Figure out why only the trailing brace needs explicit padding
+            builder.AppendLine($"{new string('\t', _nestLevel)}}}");
 
             return builder.ToString();
         }
