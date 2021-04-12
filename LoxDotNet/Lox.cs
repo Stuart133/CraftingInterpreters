@@ -47,11 +47,11 @@ namespace LoxDotNet
                 return;
             }
 
-            var printer = new AstPrinter();
-            foreach(var statement in printer.Print(statements))
-            {
-                Console.WriteLine(statement);
-            }
+            //var printer = new AstPrinter();
+            //foreach(var statement in printer.Print(statements))
+            //{
+            //    Console.WriteLine(statement);
+            //}
 
             _interpreter.Interpret(statements);
         }
