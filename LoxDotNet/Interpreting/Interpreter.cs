@@ -9,6 +9,7 @@ namespace LoxDotNet.Interpreting
     class Interpreter : Expr.IVisitor<object>, Stmt.IVisitor<object>
     {
         private Environment _environment = new Environment();
+        private static object _uninitialized = new object();
 
         public void Interpret(List<Stmt> statements)
         {
@@ -97,7 +98,14 @@ namespace LoxDotNet.Interpreting
 
         public object VisitVariableExpr(Expr.Variable expr)
         {
-            return _environment.Get(expr.name);
+            var value = _environment.Get(expr.name);
+            
+            if (value != _uninitialized)
+            {
+                return _environment.Get(expr.name);
+            }
+
+            throw new RuntimeException(expr.name, "Variable must be initialized before use.");
         }
 
         public object VisitUnaryExpr(Expr.Unary expr)
@@ -137,13 +145,16 @@ namespace LoxDotNet.Interpreting
 
         public object VisitVarStmt(Stmt.Var stmt)
         {
-            object value = null;
             if (stmt.initializer is not null)
             {
-                value = Evaluate(stmt.initializer);
+                var value = Evaluate(stmt.initializer);
+                _environment.Define(stmt.name.Lexeme, value);
+            }
+            else
+            {
+                _environment.Define(stmt.name.Lexeme, _uninitialized);
             }
 
-            _environment.Define(stmt.name.Lexeme, value);
             return null;
         }
 
