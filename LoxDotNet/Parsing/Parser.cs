@@ -22,13 +22,13 @@ namespace LoxDotNet.Parsing
 
             while (!IsAtEnd())
             {
-                statements.Add(Declaration());
+                statements.Add(Declaration(0));
             }
 
             return statements;
         }
 
-        private Stmt Declaration()
+        private Stmt Declaration(int loopDepth)
         {
             try
             {
@@ -37,7 +37,7 @@ namespace LoxDotNet.Parsing
                     return VarDeclaration();
                 }
 
-                return Statement();
+                return Statement(loopDepth);
             }
             catch (ParseException)
             {
@@ -60,16 +60,16 @@ namespace LoxDotNet.Parsing
             return new Stmt.Var(name, initializer);
         }
 
-        private Stmt Statement()
+        private Stmt Statement(int loopDepth)
         {
             if (Match(FOR))
             {
-                return ForStatement();
+                return ForStatement(loopDepth);
             }
 
             if (Match(IF))
             {
-                return IfStatement();
+                return IfStatement(loopDepth);
             }
 
             if (Match(PRINT))
@@ -79,23 +79,23 @@ namespace LoxDotNet.Parsing
 
             if (Match(WHILE))
             {
-                return WhileStatement();
+                return WhileStatement(loopDepth);
             }
 
             if (Match(BREAK))
             {
-                return BreakStatement();
+                return BreakStatement(loopDepth);
             }
 
             if (Match(LEFT_BRACE))
             {
-                return new Stmt.Block(Block());
+                return new Stmt.Block(Block(loopDepth));
             }
 
             return ExpressionStatement();
         }
 
-        private Stmt ForStatement()
+        private Stmt ForStatement(int loopDepth)
         {
             Consume(LEFT_PAREN, "Expect '(' after 'for'.");
 
@@ -128,43 +128,35 @@ namespace LoxDotNet.Parsing
             }
             Consume(RIGHT_PAREN, "Expect ')' after for clauses.");
 
-            try
+            var body = Statement(loopDepth + 1);
+
+            if (increment is not null)
             {
-                _loopDepth++;
-                var body = Statement();
-
-                if (increment is not null)
-                {
-                    body = new Stmt.Block(new List<Stmt> { body, new Stmt.Expression(increment) });
-                }
-
-                body = new Stmt.While(condition, body);
-
-                if (initializer is not null)
-                {
-                    body = new Stmt.Block(new List<Stmt> { initializer, body });
-                }
-
-                return body;
+                body = new Stmt.Block(new List<Stmt> { body, new Stmt.Expression(increment) });
             }
-            finally
+
+            body = new Stmt.While(condition, body);
+
+            if (initializer is not null)
             {
-                _loopDepth--;
+                body = new Stmt.Block(new List<Stmt> { initializer, body });
             }
+
+            return body;
         }
 
-        private Stmt IfStatement()
+        private Stmt IfStatement(int loopDepth)
         {
             Consume(LEFT_PAREN, "Expect '(' after 'if'.");
             var condition = Expression();
             Consume(RIGHT_PAREN, "Expect ')' after if condition");
 
-            var thenBranch = Statement();
+            var thenBranch = Statement(loopDepth);
             Stmt elseBranch = null;
 
             if (Match(ELSE))
             {
-                elseBranch = Statement();
+                elseBranch = Statement(loopDepth);
             }
 
             return new Stmt.If(condition, thenBranch, elseBranch);
@@ -184,27 +176,19 @@ namespace LoxDotNet.Parsing
             return new Stmt.Print(value);
         }
 
-        private Stmt WhileStatement()
+        private Stmt WhileStatement(int loopDepth)
         {
             Consume(LEFT_PAREN, "Expect '(' after 'while'.");
             var condition = Expression();
             Consume(RIGHT_PAREN, "Expect ')' after condition.");
 
-            try
-            {
-                _loopDepth++;
-                var body = Statement();
-                return new Stmt.While(condition, body);
-            }
-            finally
-            {
-                _loopDepth--;
-            }
+            var body = Statement(loopDepth + 1);
+            return new Stmt.While(condition, body);
         }
 
-        private Stmt BreakStatement()
+        private Stmt BreakStatement(int loopDepth)
         {
-            if (_loopDepth == 0)
+            if (loopDepth == 0)
             {
                 Error(Previous(), "Must be inside a loop to use 'break'.");
             }
@@ -214,13 +198,13 @@ namespace LoxDotNet.Parsing
             return new Stmt.Break();
         }
 
-        private List<Stmt> Block()
+        private List<Stmt> Block(int loopDepth)
         {
             var statements = new List<Stmt>();
 
             while (!Check(RIGHT_BRACE) && !IsAtEnd())
             {
-                statements.Add(Declaration());
+                statements.Add(Declaration(loopDepth));
             }
 
             Consume(RIGHT_BRACE, "Expect '}' after block.");
