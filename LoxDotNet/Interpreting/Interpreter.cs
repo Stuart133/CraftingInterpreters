@@ -160,7 +160,7 @@ namespace LoxDotNet.Interpreting
 
         public object VisitIfStmt(Stmt.If stmt)
         {
-            if (IsTruthy(stmt.condition))
+            if (IsTruthy(Evaluate(stmt.condition)))
             {
                 Execute(stmt.thenBranch);
             }

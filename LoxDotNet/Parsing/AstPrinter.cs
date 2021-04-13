@@ -48,7 +48,7 @@ namespace LoxDotNet.Parsing
             return expr.value.ToString();
         }
 
-        public object VisitLogicalExpr(Expr.Logical expr)
+        public string VisitLogicalExpr(Expr.Logical expr)
         {
             throw new System.NotImplementedException();
         }
