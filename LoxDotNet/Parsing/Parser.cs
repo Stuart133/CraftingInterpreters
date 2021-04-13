@@ -71,6 +71,11 @@ namespace LoxDotNet.Parsing
                 return PrintStatement();
             }
 
+            if (Match(WHILE))
+            {
+                return WhileStatement();
+            }
+
             if (Match(LEFT_BRACE))
             {
                 return new Stmt.Block(Block());
@@ -108,6 +113,16 @@ namespace LoxDotNet.Parsing
             var value = Expression();
             Consume(SEMICOLON, "Expect ';' after value");
             return new Stmt.Print(value);
+        }
+
+        private Stmt WhileStatement()
+        {
+            Consume(LEFT_PAREN, "Expect '(' after 'while'.");
+            var condition = Expression();
+            Consume(RIGHT_PAREN, "Expect ')' after condition.");
+            var body = Statement();
+
+            return new Stmt.While(condition, body);
         }
 
         private List<Stmt> Block()

@@ -14,6 +14,7 @@ namespace LoxDotNet.Parsing
 			T VisitIfStmt(If stmt);
 			T VisitPrintStmt(Print stmt);
 			T VisitVarStmt(Var stmt);
+			T VisitWhileStmt(While stmt);
 		}
 
 		public class Block : Stmt
@@ -95,6 +96,23 @@ namespace LoxDotNet.Parsing
 
 			internal Token name { get; }
 			internal Expr initializer { get; }
+		}
+
+		public class While : Stmt
+		{
+			internal While(Expr condition, Stmt body)
+			{
+				this.condition = condition;
+				this.body = body;
+			}
+
+			internal override T Accept<T>(IVisitor<T> visitor)
+			{
+				return visitor.VisitWhileStmt(this);
+			}
+
+			internal Expr condition { get; }
+			internal Stmt body { get; }
 		}
 
 		internal abstract T Accept<T>(IVisitor<T> visitor);
