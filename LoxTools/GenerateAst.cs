@@ -19,7 +19,8 @@ namespace LoxTools
             DefineAst(outputDir, "Expr", new string[]
             {
                 "LoxDotNet.Scanning"
-            }, new string[]
+            },
+            new string[]
             {
                 "Assign     : Token name, Expr value",
                 "Binary     : Expr left, Token op, Expr right",
