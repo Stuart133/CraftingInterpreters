@@ -22,7 +22,7 @@ while (a)
   a = false;
 }
 
-for (var i = 0; i < 10; i++)
+for (var i = 0; i < 10; i = i + 1)
 {
   print i;
 }
