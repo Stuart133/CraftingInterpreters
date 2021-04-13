@@ -9,6 +9,7 @@ namespace LoxDotNet.Parsing
     {
         private readonly List<Token> _tokens;
         private int _current = 0;
+        private int _loopDepth = 0;
 
         internal Parser(List<Token> tokens)
         {
@@ -127,21 +128,29 @@ namespace LoxDotNet.Parsing
             }
             Consume(RIGHT_PAREN, "Expect ')' after for clauses.");
 
-            var body = Statement();
-
-            if (increment is not null)
+            try
             {
-                body = new Stmt.Block(new List<Stmt> { body, new Stmt.Expression(increment) });
+                _loopDepth++;
+                var body = Statement();
+
+                if (increment is not null)
+                {
+                    body = new Stmt.Block(new List<Stmt> { body, new Stmt.Expression(increment) });
+                }
+
+                body = new Stmt.While(condition, body);
+
+                if (initializer is not null)
+                {
+                    body = new Stmt.Block(new List<Stmt> { initializer, body });
+                }
+
+                return body;
             }
-
-            body = new Stmt.While(condition, body);
-
-            if (initializer is not null)
+            finally
             {
-                body = new Stmt.Block(new List<Stmt> { initializer, body });
+                _loopDepth--;
             }
-
-            return body;
         }
 
         private Stmt IfStatement()
@@ -180,13 +189,26 @@ namespace LoxDotNet.Parsing
             Consume(LEFT_PAREN, "Expect '(' after 'while'.");
             var condition = Expression();
             Consume(RIGHT_PAREN, "Expect ')' after condition.");
-            var body = Statement();
 
-            return new Stmt.While(condition, body);
+            try
+            {
+                _loopDepth++;
+                var body = Statement();
+                return new Stmt.While(condition, body);
+            }
+            finally
+            {
+                _loopDepth--;
+            }
         }
 
         private Stmt BreakStatement()
         {
+            if (_loopDepth == 0)
+            {
+                Error(Previous(), "Must be inside a loop to use 'break'.");
+            }
+
             Consume(SEMICOLON, "Expect ';' after 'break'.");
 
             return new Stmt.Break();

@@ -154,7 +154,7 @@ namespace LoxDotNet.Interpreting
 
         public object VisitBreakStmt(Stmt.Break stmt)
         {
-            throw new NotImplementedException();
+            throw new BreakException();
         }
 
         public object VisitExpressionStmt(Stmt.Expression stmt)
@@ -203,7 +203,14 @@ namespace LoxDotNet.Interpreting
         {
             while (IsTruthy(Evaluate(stmt.condition)))
             {
-                Execute(stmt.body);
+                try
+                {
+                    Execute(stmt.body);
+                }
+                catch (BreakException)
+                {
+                    break;
+                }
             }
 
             return null;

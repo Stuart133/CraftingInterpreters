@@ -12,5 +12,7 @@ namespace LoxDotNet.Interpreting
         {
             Token = token;
         }
+
+        internal RuntimeException() { }
     }
 }
