@@ -10,6 +10,7 @@ namespace LoxDotNet.Parsing
 		{
 			T VisitAssignExpr(Assign expr);
 			T VisitBinaryExpr(Binary expr);
+			T VisitCallExpr(Call expr);
 			T VisitConditionalExpr(Conditional expr);
 			T VisitGroupingExpr(Grouping expr);
 			T VisitLiteralExpr(Literal expr);
@@ -52,6 +53,25 @@ namespace LoxDotNet.Parsing
 			internal Expr left { get; }
 			internal Token op { get; }
 			internal Expr right { get; }
+		}
+
+		public class Call : Expr
+		{
+			internal Call(Expr callee, Token param, List<Expr> arguments)
+			{
+				this.callee = callee;
+				this.param = param;
+				this.arguments = arguments;
+			}
+
+			internal override T Accept<T>(IVisitor<T> visitor)
+			{
+				return visitor.VisitCallExpr(this);
+			}
+
+			internal Expr callee { get; }
+			internal Token param { get; }
+			internal List<Expr> arguments { get; }
 		}
 
 		public class Conditional : Expr

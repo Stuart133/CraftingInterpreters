@@ -24,6 +24,7 @@ namespace LoxTools
             {
                 "Assign     : Token name, Expr value",
                 "Binary     : Expr left, Token op, Expr right",
+                "Call       : Expr callee, Token param, List<Expr> arguments",
                 "Conditional: Expr ifExpr, Expr thenBranch, Expr elseBranch",
                 "Grouping   : Expr expression",
                 "Literal    : object value",
