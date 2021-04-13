@@ -40,6 +40,7 @@ namespace LoxTools
             , new string[]
             {
                 "Block      : List<Stmt> statements",
+                "Break      : ",
                 "Expression : Expr expression",
                 "If         : Expr condition, Stmt thenBranch, Stmt elseBranch",
                 "Print      : Expr expression",
@@ -114,10 +115,13 @@ namespace LoxTools
             builder.AppendLine("\t\t\t{");
 
             // Store parameters in properties
-            foreach (var field in fieldList.Split(", "))
+            if (fieldList.Length != 0)
             {
-                var name = field.Split(' ')[1];
-                builder.AppendLine($"\t\t\t\tthis.{name} = {name};");
+                foreach (var field in fieldList.Split(", "))
+                {
+                    var name = field.Split(' ')[1];
+                    builder.AppendLine($"\t\t\t\tthis.{name} = {name};");
+                }
             }
             builder.AppendLine("\t\t\t}");
             builder.AppendLine();
@@ -130,9 +134,12 @@ namespace LoxTools
             builder.AppendLine();
 
             // Properties
-            foreach (var field in fieldList.Split(", "))
+            if (fieldList.Length != 0)
             {
-                builder.AppendLine($"\t\t\tinternal {field} {{ get; }}");
+                foreach (var field in fieldList.Split(", "))
+                {
+                    builder.AppendLine($"\t\t\tinternal {field} {{ get; }}");
+                }
             }
 
             builder.AppendLine("\t\t}");

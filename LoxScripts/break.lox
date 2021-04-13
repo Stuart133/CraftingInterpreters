@@ -1,0 +1,8 @@
+for (var i = 0; true; i = i + 1)
+{
+  print i;
+  if (i > 15)
+  {
+    break;
+  }
+}
