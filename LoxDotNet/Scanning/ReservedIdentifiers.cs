@@ -23,6 +23,7 @@ namespace LoxDotNet.Scanning
             { "true", TRUE },
             { "var", VAR },
             { "while", WHILE },
+            { "break", BREAK },
         };
     }
 }
