@@ -1,0 +1,28 @@
+var a = true;
+var b = "A true string";
+var c = nil;
+
+if (a)
+{
+  print "a is true";
+}
+
+if (a and c)
+{
+  print "a and c are true";
+}
+else
+{
+  print "a and c are not true";
+}
+
+while (a)
+{
+  print "a is true on this loop";
+  a = false;
+}
+
+for (var i = 0; i < 10; i++)
+{
+  print i;
+}
