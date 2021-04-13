@@ -74,6 +74,11 @@ namespace LoxDotNet.Interpreting
             }
         }
 
+        public object VisitCallExpr(Expr.Call expr)
+        {
+            return null;
+        }
+
         public object VisitConditionalExpr(Expr.Conditional expr)
         {
             if (IsTruthy(Evaluate(expr.ifExpr)))

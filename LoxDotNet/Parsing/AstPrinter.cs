@@ -28,6 +28,11 @@ namespace LoxDotNet.Parsing
             return Parenthesize(expr.op.Lexeme, expr.left, expr.right);
         }
 
+        public string VisitCallExpr(Expr.Call expr)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public string VisitGroupingExpr(Expr.Grouping expr)
         {
             return Parenthesize("group", expr.expression);

@@ -296,7 +296,26 @@ namespace LoxDotNet.Parsing
                 return new Expr.Unary(op, right);
             }
 
-            return Primary();
+            return Call();
+        }
+
+        private Expr Call()
+        {
+            var expr = Primary();
+
+            while (true)
+            {
+                if (Match(LEFT_PAREN))
+                {
+                    expr = finishCall(expr);
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return expr;
         }
 
         private Expr Primary()
