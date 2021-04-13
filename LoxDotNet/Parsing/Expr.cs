@@ -13,6 +13,7 @@ namespace LoxDotNet.Parsing
 			T VisitConditionalExpr(Conditional expr);
 			T VisitGroupingExpr(Grouping expr);
 			T VisitLiteralExpr(Literal expr);
+			T VisitLogicalExpr(Logical expr);
 			T VisitVariableExpr(Variable expr);
 			T VisitUnaryExpr(Unary expr);
 		}
@@ -100,6 +101,25 @@ namespace LoxDotNet.Parsing
 			}
 
 			internal object value { get; }
+		}
+
+		public class Logical : Expr
+		{
+			internal Logical(Expr left, Token op, Expr right)
+			{
+				this.left = left;
+				this.op = op;
+				this.right = right;
+			}
+
+			internal override T Accept<T>(IVisitor<T> visitor)
+			{
+				return visitor.VisitLogicalExpr(this);
+			}
+
+			internal Expr left { get; }
+			internal Token op { get; }
+			internal Expr right { get; }
 		}
 
 		public class Variable : Expr

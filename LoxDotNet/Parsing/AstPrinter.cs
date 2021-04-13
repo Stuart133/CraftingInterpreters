@@ -48,6 +48,11 @@ namespace LoxDotNet.Parsing
             return expr.value.ToString();
         }
 
+        public object VisitLogicalExpr(Expr.Logical expr)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public string VisitUnaryExpr(Expr.Unary expr)
         {
             return Parenthesize(expr.op.Lexeme, expr.right);
@@ -88,7 +93,7 @@ namespace LoxDotNet.Parsing
 
         public string VisitIfStmt(Stmt.If stmt)
         {
-            throw new System.Exception();
+            throw new System.NotImplementedException();
         }
 
         public string VisitPrintStmt(Stmt.Print stmt)

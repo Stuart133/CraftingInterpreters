@@ -156,7 +156,7 @@ namespace LoxDotNet.Parsing
 
         private Expr Conditional()
         {
-            var ifExpr = Equality();
+            var ifExpr = Or();
 
             if (Match(QUESTION))
             {
@@ -167,6 +167,16 @@ namespace LoxDotNet.Parsing
             }
 
             return ifExpr;
+        }
+
+        private Expr Or()
+        {
+            return LogicalExpr(And, OR);
+        }
+
+        private Expr And()
+        {
+            return LogicalExpr(Equality, AND);
         }
 
         private Expr Equality()
@@ -262,6 +272,20 @@ namespace LoxDotNet.Parsing
                 var op = Previous();
                 var right = operandMethod();
                 expr = new Expr.Binary(expr, op, right);
+            }
+
+            return expr;
+        }
+
+        private Expr LogicalExpr(Func<Expr> operandMethod, params TokenType[] matchTokenTypes)
+        {
+            var expr = operandMethod();
+
+            while (Match(matchTokenTypes))
+            {
+                var op = Previous();
+                var right = operandMethod();
+                expr = new Expr.Logical(expr, op, right);
             }
 
             return expr;

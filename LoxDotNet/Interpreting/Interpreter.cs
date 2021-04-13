@@ -96,6 +96,28 @@ namespace LoxDotNet.Interpreting
             return expr.value;
         }
 
+        public object VisitLogicalExpr(Expr.Logical expr)
+        {
+            var left = Evaluate(expr.left);
+
+            if (expr.op.Type == OR)
+            {
+                if (IsTruthy(left))
+                {
+                    return left;
+                }
+            }
+            else
+            {
+                if (!IsTruthy(left))
+                {
+                    return left;
+                }
+            }
+
+            return Evaluate(expr.right);
+        }
+
         public object VisitVariableExpr(Expr.Variable expr)
         {
             var value = _environment.Get(expr.name);
