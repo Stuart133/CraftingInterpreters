@@ -10,7 +10,7 @@ namespace LoxDotNet.Parsing
         public IEnumerable<string> Print(List<Stmt> statements)
         {
             var output = new List<string>();
-            foreach(var statement in statements)
+            foreach (var statement in statements)
             {
                 output.Add(statement.Accept(this));
             }
@@ -84,6 +84,11 @@ namespace LoxDotNet.Parsing
             builder.AppendLine($"{new string('\t', _nestLevel)}}}");
 
             return builder.ToString();
+        }
+
+        public string VisitBreakStmt(Stmt.Break stmt)
+        {
+            throw new System.NotImplementedException();
         }
 
         public string VisitExpressionStmt(Stmt.Expression stmt)

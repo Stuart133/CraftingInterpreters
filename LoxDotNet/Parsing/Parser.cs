@@ -81,6 +81,11 @@ namespace LoxDotNet.Parsing
                 return WhileStatement();
             }
 
+            if (Match(BREAK))
+            {
+                return BreakStatement();
+            }
+
             if (Match(LEFT_BRACE))
             {
                 return new Stmt.Block(Block());
@@ -178,6 +183,13 @@ namespace LoxDotNet.Parsing
             var body = Statement();
 
             return new Stmt.While(condition, body);
+        }
+
+        private Stmt BreakStatement()
+        {
+            Consume(SEMICOLON, "Expect ';' after 'break'.");
+
+            return new Stmt.Break();
         }
 
         private List<Stmt> Block()

@@ -152,6 +152,11 @@ namespace LoxDotNet.Interpreting
             return null;
         }
 
+        public object VisitBreakStmt(Stmt.Break stmt)
+        {
+            throw new NotImplementedException();
+        }
+
         public object VisitExpressionStmt(Stmt.Expression stmt)
         {
             Evaluate(stmt.expression);
