@@ -106,6 +106,11 @@ namespace LoxDotNet.Parsing
             return Parenthesize($"define {stmt.name.Lexeme}", stmt.initializer);
         }
 
+        public string VisitWhileStmt(Stmt.While stmt)
+        {
+            throw new System.NotImplementedException();
+        }
+
         private string Parenthesize(string name, params Expr[] exprs)
         {
             var builder = new StringBuilder();

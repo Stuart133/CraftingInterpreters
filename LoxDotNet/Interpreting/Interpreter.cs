@@ -194,6 +194,16 @@ namespace LoxDotNet.Interpreting
             return null;
         }
 
+        public object VisitWhileStmt(Stmt.While stmt)
+        {
+            while (IsTruthy(Evaluate(stmt.condition)))
+            {
+                Execute(stmt.body);
+            }
+
+            return null;
+        }
+
         private void Execute(Stmt stmt)
         {
             stmt.Accept(this);
