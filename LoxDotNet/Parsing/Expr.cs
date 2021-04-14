@@ -1,6 +1,7 @@
 // This file is auto generated from LoxTools - Do not modify directly
 
 using LoxDotNet.Scanning;
+using System.Collections.Generic;
 
 namespace LoxDotNet.Parsing
 {
@@ -57,10 +58,10 @@ namespace LoxDotNet.Parsing
 
 		public class Call : Expr
 		{
-			internal Call(Expr callee, Token param, List<Expr> arguments)
+			internal Call(Expr callee, Token paren, List<Expr> arguments)
 			{
 				this.callee = callee;
-				this.param = param;
+				this.paren = paren;
 				this.arguments = arguments;
 			}
 
@@ -70,7 +71,7 @@ namespace LoxDotNet.Parsing
 			}
 
 			internal Expr callee { get; }
-			internal Token param { get; }
+			internal Token paren { get; }
 			internal List<Expr> arguments { get; }
 		}
 

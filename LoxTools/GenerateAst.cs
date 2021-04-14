@@ -18,13 +18,14 @@ namespace LoxTools
             var outputDir = args[0];
             DefineAst(outputDir, "Expr", new string[]
             {
-                "LoxDotNet.Scanning"
+                "LoxDotNet.Scanning",
+                "System.Collections.Generic"
             },
             new string[]
             {
                 "Assign     : Token name, Expr value",
                 "Binary     : Expr left, Token op, Expr right",
-                "Call       : Expr callee, Token param, List<Expr> arguments",
+                "Call       : Expr callee, Token paren, List<Expr> arguments",
                 "Conditional: Expr ifExpr, Expr thenBranch, Expr elseBranch",
                 "Grouping   : Expr expression",
                 "Literal    : object value",

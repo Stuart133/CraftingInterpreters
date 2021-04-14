@@ -6,7 +6,7 @@ using static LoxDotNet.Scanning.TokenType;
 
 namespace LoxDotNet.Interpreting
 {
-    class Interpreter : Expr.IVisitor<object>, Stmt.IVisitor<object>
+    public class Interpreter : Expr.IVisitor<object>, Stmt.IVisitor<object>
     {
         private Environment _environment = new Environment();
         private static object _uninitialized = new object();
@@ -76,7 +76,20 @@ namespace LoxDotNet.Interpreting
 
         public object VisitCallExpr(Expr.Call expr)
         {
-            return null;
+            var callee = Evaluate(expr.callee);
+
+            var args = new List<object>();
+            foreach (var arg in expr.arguments)
+            {
+                args.Add(Evaluate(arg));
+            }
+
+            if (callee is ICallable function)
+            {
+                return function.Call(this, args);
+            }
+
+            throw new RuntimeException(expr.paren, "Can only call functions and classes");
         }
 
         public object VisitConditionalExpr(Expr.Conditional expr)

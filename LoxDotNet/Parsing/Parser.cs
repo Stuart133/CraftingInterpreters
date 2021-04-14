@@ -307,7 +307,7 @@ namespace LoxDotNet.Parsing
             {
                 if (Match(LEFT_PAREN))
                 {
-                    expr = finishCall(expr);
+                    expr = FinishCall(expr);
                 }
                 else
                 {
@@ -316,6 +316,28 @@ namespace LoxDotNet.Parsing
             }
 
             return expr;
+        }
+
+        private Expr FinishCall(Expr callee)
+        {
+            var args = new List<Expr>();
+            if (!Check(RIGHT_PAREN))
+            {
+                do
+                {
+                    if (args.Count >= 255)
+                    {
+                        Error(Peek(), "Can't have more than 255 arguments.");
+                    }
+
+                    args.Add(Expression());
+                }
+                while (Match(COMMA));
+            }
+
+            var paren = Consume(RIGHT_PAREN, "Expect ')' after arguments.");
+
+            return new Expr.Call(callee, paren, args);
         }
 
         private Expr Primary()
