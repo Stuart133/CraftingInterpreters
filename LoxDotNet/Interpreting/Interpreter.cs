@@ -8,8 +8,18 @@ namespace LoxDotNet.Interpreting
 {
     public class Interpreter : Expr.IVisitor<object>, Stmt.IVisitor<object>
     {
-        private Environment _environment = new Environment();
+        private readonly Environment _globals = new Environment();
+        private Environment _environment;
+
+        // Setinal value
         private static object _uninitialized = new object();
+
+        public Interpreter()
+        {
+            _environment = _globals;
+
+            _globals.Define("clock", new Clock());
+        }
 
         public void Interpret(List<Stmt> statements)
         {
@@ -83,10 +93,15 @@ namespace LoxDotNet.Interpreting
             {
                 args.Add(Evaluate(arg));
             }
-
+            
             if (callee is ICallable function)
             {
-                return function.Call(this, args);
+                if (args.Count != function.Arity())
+                {
+                    throw new RuntimeException(expr.paren, $"Expected {function.Arity()} arguments but got {args.Count}.");
+                }
+
+               return function.Call(this, args);
             }
 
             throw new RuntimeException(expr.paren, "Can only call functions and classes");
