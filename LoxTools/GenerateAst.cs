@@ -44,6 +44,7 @@ namespace LoxTools
                 "Block      : List<Stmt> statements",
                 "Break      : ",
                 "Expression : Expr expression",
+                "Function   : Token name, List<Token> parameters, List<Stmt> body",
                 "If         : Expr condition, Stmt thenBranch, Stmt elseBranch",
                 "Print      : Expr expression",
                 "Var        : Token name, Expr initializer",

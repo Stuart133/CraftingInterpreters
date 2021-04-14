@@ -32,6 +32,11 @@ namespace LoxDotNet.Parsing
         {
             try
             {
+                if (Match(FUN))
+                {
+                    return Function("function", loopDepth);
+                }
+
                 if (Match(VAR))
                 {
                     return VarDeclaration();
@@ -167,6 +172,31 @@ namespace LoxDotNet.Parsing
             var expr = Expression();
             Consume(SEMICOLON, "Expect ';' after expression");
             return new Stmt.Expression(expr);
+        }
+
+        private Stmt Function(string kind, int loopDepth)
+        {
+            var name = Consume(IDENTIFIER, $"Expect {kind} name.");
+
+            var parameters = new List<Token>();
+            if (!Check(RIGHT_PAREN))
+            {
+                do
+                {
+                    if (parameters.Count >= 255)
+                    {
+                        Error(Peek(), "Can't have more than 255 parameters");
+                    }
+
+                    parameters.Add(Consume(IDENTIFIER, "Expect parameter name."));
+                }
+                while (Match(COMMA));
+            }
+            Consume(RIGHT_PAREN, "Expect ')' after parameters");
+
+            Consume(LEFT_BRACE, $"Expect '{{' before {kind} body.");
+            var body = Block(loopDepth);
+            return new Stmt.Function(name, parameters, body);
         }
 
         private Stmt PrintStatement()

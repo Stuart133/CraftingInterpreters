@@ -12,6 +12,7 @@ namespace LoxDotNet.Parsing
 			T VisitBlockStmt(Block stmt);
 			T VisitBreakStmt(Break stmt);
 			T VisitExpressionStmt(Expression stmt);
+			T VisitFunctionStmt(Function stmt);
 			T VisitIfStmt(If stmt);
 			T VisitPrintStmt(Print stmt);
 			T VisitVarStmt(Var stmt);
@@ -59,6 +60,25 @@ namespace LoxDotNet.Parsing
 			}
 
 			internal Expr expression { get; }
+		}
+
+		public class Function : Stmt
+		{
+			internal Function(Token name, List<Token> parameters, List<Stmt> body)
+			{
+				this.name = name;
+				this.parameters = parameters;
+				this.body = body;
+			}
+
+			internal override T Accept<T>(IVisitor<T> visitor)
+			{
+				return visitor.VisitFunctionStmt(this);
+			}
+
+			internal Token name { get; }
+			internal List<Token> parameters { get; }
+			internal List<Stmt> body { get; }
 		}
 
 		public class If : Stmt
