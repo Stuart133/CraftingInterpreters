@@ -1,0 +1,12 @@
+fun printme(value)
+{
+  print value;
+}
+
+fun adder(a, b)
+{
+  print a + b;
+}
+
+printme("year");
+adder(3, 553);

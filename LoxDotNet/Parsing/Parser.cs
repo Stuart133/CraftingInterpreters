@@ -178,6 +178,7 @@ namespace LoxDotNet.Parsing
         {
             var name = Consume(IDENTIFIER, $"Expect {kind} name.");
 
+            Consume(LEFT_PAREN, $"Expect '(' after {kind} name.");
             var parameters = new List<Token>();
             if (!Check(RIGHT_PAREN))
             {
@@ -243,12 +244,7 @@ namespace LoxDotNet.Parsing
 
         private Expr Expression()
         {
-            return Comma();
-        }
-
-        private Expr Comma()
-        {
-            return BinaryExpr(Assignment, COMMA);
+            return Assignment();
         }
 
         private Expr Assignment()
