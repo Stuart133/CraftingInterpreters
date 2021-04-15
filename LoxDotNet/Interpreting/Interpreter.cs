@@ -196,6 +196,13 @@ namespace LoxDotNet.Interpreting
             return null;
         }
 
+        public object VisitFunctionStmt(Stmt.Function stmt)
+        {
+            var function = new LoxFunction(stmt);
+            _environment.Define(stmt.name.Lexeme, function);
+            return null;
+        }
+
         public object VisitIfStmt(Stmt.If stmt)
         {
             if (IsTruthy(Evaluate(stmt.condition)))
@@ -254,7 +261,7 @@ namespace LoxDotNet.Interpreting
             stmt.Accept(this);
         }
 
-        public void ExecuteBlock(List<Stmt> statements, Environment environment)
+        internal void ExecuteBlock(List<Stmt> statements, Environment environment)
         {
             var previous = _environment;
             try

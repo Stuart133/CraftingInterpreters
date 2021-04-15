@@ -29,5 +29,10 @@ namespace LoxDotNet.Interpreting
             interpreter.ExecuteBlock(_declaration.body, environment);
             return null;
         }
+
+        public override string ToString()
+        {
+            return $"<fn {_declaration.name.Lexeme}>";
+        }
     }
 }

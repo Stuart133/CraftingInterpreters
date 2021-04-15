@@ -101,6 +101,11 @@ namespace LoxDotNet.Parsing
             return stmt.expression.Accept(this);
         }
 
+        public string VisitFunctionStmt(Stmt.Function stmt)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public string VisitIfStmt(Stmt.If stmt)
         {
             throw new System.NotImplementedException();
