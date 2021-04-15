@@ -1,5 +1,4 @@
 ﻿using LoxDotNet.Parsing;
-using System;
 using System.Collections.Generic;
 
 namespace LoxDotNet.Interpreting
