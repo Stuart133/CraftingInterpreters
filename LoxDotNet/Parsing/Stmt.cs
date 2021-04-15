@@ -15,6 +15,7 @@ namespace LoxDotNet.Parsing
 			T VisitFunctionStmt(Function stmt);
 			T VisitIfStmt(If stmt);
 			T VisitPrintStmt(Print stmt);
+			T VisitReturnStmt(Return stmt);
 			T VisitVarStmt(Var stmt);
 			T VisitWhileStmt(While stmt);
 		}
@@ -113,6 +114,23 @@ namespace LoxDotNet.Parsing
 			}
 
 			internal Expr expression { get; }
+		}
+
+		public class Return : Stmt
+		{
+			internal Return(Token keyword, Expr value)
+			{
+				this.keyword = keyword;
+				this.value = value;
+			}
+
+			internal override T Accept<T>(IVisitor<T> visitor)
+			{
+				return visitor.VisitReturnStmt(this);
+			}
+
+			internal Token keyword { get; }
+			internal Expr value { get; }
 		}
 
 		public class Var : Stmt
