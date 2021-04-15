@@ -198,7 +198,7 @@ namespace LoxDotNet.Interpreting
 
         public object VisitFunctionStmt(Stmt.Function stmt)
         {
-            var function = new LoxFunction(stmt);
+            var function = new LoxFunction(stmt, _environment);
             _environment.Define(stmt.name.Lexeme, function);
             return null;
         }
