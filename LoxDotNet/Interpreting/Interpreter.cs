@@ -8,7 +8,7 @@ namespace LoxDotNet.Interpreting
 {
     public class Interpreter : Expr.IVisitor<object>, Stmt.IVisitor<object>
     {
-        private readonly Environment _globals = new Environment();
+        internal Environment Globals { get; } = new Environment();
         private Environment _environment;
 
         // Setinal value
@@ -16,9 +16,9 @@ namespace LoxDotNet.Interpreting
 
         public Interpreter()
         {
-            _environment = _globals;
+            _environment = Globals;
 
-            _globals.Define("clock", new Clock());
+            Globals.Define("clock", new Clock());
         }
 
         public void Interpret(List<Stmt> statements)
@@ -254,7 +254,7 @@ namespace LoxDotNet.Interpreting
             stmt.Accept(this);
         }
 
-        private void ExecuteBlock(List<Stmt> statements, Environment environment)
+        public void ExecuteBlock(List<Stmt> statements, Environment environment)
         {
             var previous = _environment;
             try
