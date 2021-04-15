@@ -82,6 +82,11 @@ namespace LoxDotNet.Parsing
                 return PrintStatement();
             }
 
+            if (Match(RETURN))
+            {
+                return ReturnStatement();
+            }
+
             if (Match(WHILE))
             {
                 return WhileStatement(loopDepth);
@@ -205,6 +210,19 @@ namespace LoxDotNet.Parsing
             var value = Expression();
             Consume(SEMICOLON, "Expect ';' after value");
             return new Stmt.Print(value);
+        }
+
+        private Stmt ReturnStatement()
+        {
+            var keyword = Previous();
+            Expr value = null;
+            if (!Check(SEMICOLON))
+            {
+                value = Expression();
+            }
+
+            Consume(SEMICOLON, "Expect ';' after return value.");
+            return new Stmt.Return(keyword, value);
         }
 
         private Stmt WhileStatement(int loopDepth)

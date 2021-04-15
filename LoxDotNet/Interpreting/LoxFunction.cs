@@ -26,7 +26,15 @@ namespace LoxDotNet.Interpreting
                 environment.Define(_declaration.parameters[i].Lexeme, arguments[i]);
             }
 
-            interpreter.ExecuteBlock(_declaration.body, environment);
+            try
+            {
+                interpreter.ExecuteBlock(_declaration.body, environment);
+            }
+            catch (Return returnValue)
+            {
+                return returnValue.Value;
+            }
+
             return null;
         }
 

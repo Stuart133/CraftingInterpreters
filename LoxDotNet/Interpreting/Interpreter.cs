@@ -224,6 +224,17 @@ namespace LoxDotNet.Interpreting
             return null;
         }
 
+        public object VisitReturnStmt(Stmt.Return stmt)
+        {
+            object value = null;
+            if (stmt.value is not null)
+            {
+                value = Evaluate(stmt.value);
+            }
+
+            throw new Return(value);
+        }
+
         public object VisitVarStmt(Stmt.Var stmt)
         {
             if (stmt.initializer is not null)

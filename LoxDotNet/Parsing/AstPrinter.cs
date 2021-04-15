@@ -116,6 +116,11 @@ namespace LoxDotNet.Parsing
             return Parenthesize("print", stmt.expression);
         }
 
+        public string VisitReturnStmt(Stmt.Return stmt)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public string VisitVarStmt(Stmt.Var stmt)
         {
             return Parenthesize($"define {stmt.name.Lexeme}", stmt.initializer);
