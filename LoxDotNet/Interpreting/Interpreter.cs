@@ -119,6 +119,11 @@ namespace LoxDotNet.Interpreting
             }
         }
 
+        public object VisitFunctionExpr(Expr.Function expr)
+        {
+            return null;
+        }
+
         public object VisitGroupingExpr(Expr.Grouping expr)
         {
             return Evaluate(expr.expression);
@@ -198,7 +203,7 @@ namespace LoxDotNet.Interpreting
 
         public object VisitFunctionStmt(Stmt.Function stmt)
         {
-            var function = new LoxFunction(stmt, _environment);
+            var function = new LoxFunction(stmt.name, stmt.function, _environment);
             _environment.Define(stmt.name.Lexeme, function);
             return null;
         }

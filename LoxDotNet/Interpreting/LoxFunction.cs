@@ -1,15 +1,18 @@
 ﻿using LoxDotNet.Parsing;
+using LoxDotNet.Scanning;
 using System.Collections.Generic;
 
 namespace LoxDotNet.Interpreting
 {
     class LoxFunction : ICallable
     {
-        private readonly Stmt.Function _declaration;
+        private readonly Token _name;
+        private readonly Expr.Function _declaration;
         private readonly Environment _closure;
 
-        public LoxFunction(Stmt.Function declaration, Environment closure)
+        public LoxFunction(Token name, Expr.Function declaration, Environment closure)
         {
+            _name = name;
             _declaration = declaration;
             _closure = closure;
         }
@@ -41,7 +44,7 @@ namespace LoxDotNet.Interpreting
 
         public override string ToString()
         {
-            return $"<fn {_declaration.name.Lexeme}>";
+            return $"<fn {_name.Lexeme}>";
         }
     }
 }

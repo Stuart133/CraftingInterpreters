@@ -65,11 +65,10 @@ namespace LoxDotNet.Parsing
 
 		public class Function : Stmt
 		{
-			internal Function(Token name, List<Token> parameters, List<Stmt> body)
+			internal Function(Token name, Expr.Function function)
 			{
 				this.name = name;
-				this.parameters = parameters;
-				this.body = body;
+				this.function = function;
 			}
 
 			internal override T Accept<T>(IVisitor<T> visitor)
@@ -78,8 +77,7 @@ namespace LoxDotNet.Parsing
 			}
 
 			internal Token name { get; }
-			internal List<Token> parameters { get; }
-			internal List<Stmt> body { get; }
+			internal Expr.Function function { get; }
 		}
 
 		public class If : Stmt

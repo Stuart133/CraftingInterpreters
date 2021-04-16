@@ -34,7 +34,7 @@ namespace LoxDotNet.Parsing
             {
                 if (Match(FUN))
                 {
-                    return Function("function", loopDepth);
+                    return FunctionStatement("function", loopDepth);
                 }
 
                 if (Match(VAR))
@@ -179,11 +179,16 @@ namespace LoxDotNet.Parsing
             return new Stmt.Expression(expr);
         }
 
-        private Stmt Function(string kind, int loopDepth)
+        private Stmt FunctionStatement(string kind, int loopDepth)
         {
             var name = Consume(IDENTIFIER, $"Expect {kind} name.");
+            var function = Function(loopDepth);
+            return new Stmt.Function(name, function);
+        }
 
-            Consume(LEFT_PAREN, $"Expect '(' after {kind} name.");
+        private Expr.Function Function(int loopDepth)
+        {
+            Consume(LEFT_PAREN, $"Expect '(' after function name.");
             var parameters = new List<Token>();
             if (!Check(RIGHT_PAREN))
             {
@@ -200,9 +205,9 @@ namespace LoxDotNet.Parsing
             }
             Consume(RIGHT_PAREN, "Expect ')' after parameters");
 
-            Consume(LEFT_BRACE, $"Expect '{{' before {kind} body.");
+            Consume(LEFT_BRACE, $"Expect '{{' before function body.");
             var body = Block(loopDepth);
-            return new Stmt.Function(name, parameters, body);
+            return new Expr.Function(parameters, body);
         }
 
         private Stmt PrintStatement()
