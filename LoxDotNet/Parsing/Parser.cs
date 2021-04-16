@@ -31,7 +31,7 @@ namespace LoxDotNet.Parsing
         {
             try
             {
-                if (Match(FUN))
+                if (CheckNext(IDENTIFIER) && Match(FUN))
                 {
                     return FunctionStatement("function");
                 }
@@ -496,6 +496,16 @@ namespace LoxDotNet.Parsing
             }
 
             return Peek().Type == type;
+        }
+
+        private bool CheckNext(TokenType type)
+        {
+            if (IsAtEnd() || _tokens[_current + 1].Type == EOF)
+            {
+                return false;
+            }
+
+            return _tokens[_current + 1].Type == type;
         }
 
         private Token Advance()
