@@ -4,11 +4,8 @@ fun thrice(fn) {
   }
 }
 
-fun yeah(a) {
-  print a;
-}
+fun () {};
 
-thrice(yeah);
 thrice(fun (a) {
-  print a;
-})
+  print a + 1;
+});

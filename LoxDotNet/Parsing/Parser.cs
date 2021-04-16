@@ -9,7 +9,6 @@ namespace LoxDotNet.Parsing
     {
         private readonly List<Token> _tokens;
         private int _current = 0;
-        private int _loopDepth = 0;
 
         internal Parser(List<Token> tokens)
         {
@@ -34,7 +33,7 @@ namespace LoxDotNet.Parsing
             {
                 if (Match(FUN))
                 {
-                    return FunctionStatement("function", loopDepth);
+                    return FunctionStatement("function");
                 }
 
                 if (Match(VAR))
@@ -79,6 +78,7 @@ namespace LoxDotNet.Parsing
 
             if (Match(PRINT))
             {
+
                 return PrintStatement();
             }
 
@@ -179,35 +179,11 @@ namespace LoxDotNet.Parsing
             return new Stmt.Expression(expr);
         }
 
-        private Stmt FunctionStatement(string kind, int loopDepth)
+        private Stmt FunctionStatement(string kind)
         {
             var name = Consume(IDENTIFIER, $"Expect {kind} name.");
-            var function = Function(loopDepth);
+            var function = Function(kind);
             return new Stmt.Function(name, function);
-        }
-
-        private Expr.Function Function(int loopDepth)
-        {
-            Consume(LEFT_PAREN, $"Expect '(' after function name.");
-            var parameters = new List<Token>();
-            if (!Check(RIGHT_PAREN))
-            {
-                do
-                {
-                    if (parameters.Count >= 255)
-                    {
-                        Error(Peek(), "Can't have more than 255 parameters");
-                    }
-
-                    parameters.Add(Consume(IDENTIFIER, "Expect parameter name."));
-                }
-                while (Match(COMMA));
-            }
-            Consume(RIGHT_PAREN, "Expect ')' after parameters");
-
-            Consume(LEFT_BRACE, $"Expect '{{' before function body.");
-            var body = Block(loopDepth);
-            return new Expr.Function(parameters, body);
         }
 
         private Stmt PrintStatement()
@@ -394,6 +370,11 @@ namespace LoxDotNet.Parsing
             if (Match(FALSE)) return new Expr.Literal(false);
             if (Match(TRUE)) return new Expr.Literal(true);
             if (Match(NIL)) return new Expr.Literal(null);
+            
+            if(Match(FUN))
+            {
+                return Function("function");
+            }
 
             if (Match(NUMBER, STRING))
             {
@@ -439,6 +420,30 @@ namespace LoxDotNet.Parsing
             }
 
             throw Error(Peek(), "Expected expression");
+        }
+
+        private Expr.Function Function(string kind)
+        {
+            Consume(LEFT_PAREN, $"Expect '(' after {kind} name.");
+            var parameters = new List<Token>();
+            if (!Check(RIGHT_PAREN))
+            {
+                do
+                {
+                    if (parameters.Count >= 255)
+                    {
+                        Error(Peek(), "Can't have more than 255 parameters");
+                    }
+
+                    parameters.Add(Consume(IDENTIFIER, "Expect parameter name."));
+                }
+                while (Match(COMMA));
+            }
+            Consume(RIGHT_PAREN, "Expect ')' after parameters");
+
+            Consume(LEFT_BRACE, $"Expect '{{' before {kind} body.");
+            var body = Block(0);
+            return new Expr.Function(parameters, body);
         }
 
         private Expr BinaryExpr(Func<Expr> operandMethod, params TokenType[] matchTokenTypes)

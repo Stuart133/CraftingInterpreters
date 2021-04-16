@@ -121,7 +121,7 @@ namespace LoxDotNet.Interpreting
 
         public object VisitFunctionExpr(Expr.Function expr)
         {
-            return null;
+            return new LoxFunction(null, expr, _environment);
         }
 
         public object VisitGroupingExpr(Expr.Grouping expr)
