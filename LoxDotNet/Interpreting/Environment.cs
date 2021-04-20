@@ -35,6 +35,11 @@ namespace LoxDotNet.Interpreting
             throw new RuntimeException(name, $"Undefined variable '{name.Lexeme}'.");
         }
 
+        internal void AssignAt(int distance, Token name, object value)
+        {
+            Ancestor(distance)._values[name.Lexeme] = value;
+        }
+
         internal object Get(Token name)
         {
             if (_values.TryGetValue(name.Lexeme, out var value))

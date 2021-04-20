@@ -40,8 +40,16 @@ namespace LoxDotNet.Interpreting
         public object VisitAssignExpr(Expr.Assign expr)
         {
             var value = Evaluate(expr.value);
-            _environment.Assign(expr.name, value);
-            return value;
+
+            var valuePresent = _locals.TryGetValue(expr, out var distance);
+            if (valuePresent)
+            {
+                return _environment.AssignAt(distance, expr.name);
+            }
+            else
+            {
+                return Globals.Assign(expr.name, value);
+            }
         }
 
         public object VisitBinaryExpr(Expr.Binary expr)
