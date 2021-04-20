@@ -10,6 +10,7 @@ namespace LoxDotNet.Interpreting
     {
         internal Environment Globals { get; } = new Environment();
         private Environment _environment;
+        private readonly Dictionary<Expr, int> _locals = new Dictionary<Expr, int>();
 
         // Setinal value
         private static object _uninitialized = new object();
@@ -158,14 +159,7 @@ namespace LoxDotNet.Interpreting
 
         public object VisitVariableExpr(Expr.Variable expr)
         {
-            var value = _environment.Get(expr.name);
-            
-            if (value != _uninitialized)
-            {
-                return _environment.Get(expr.name);
-            }
-
-            throw new RuntimeException(expr.name, "Variable must be initialized before use.");
+            return LookUpVariable(expr.name, expr);
         }
 
         public object VisitUnaryExpr(Expr.Unary expr)
@@ -294,9 +288,27 @@ namespace LoxDotNet.Interpreting
             }
         }
 
+        internal void Resolve(Expr expr, int depth)
+        {
+            _locals[expr] = depth;
+        }
+
         private object Evaluate(Expr expr)
         {
             return expr.Accept(this);
+        }
+
+        private object LookUpVariable(Token name, Expr expr)
+        {
+            var valuePresent = _locals.TryGetValue(expr, out var distance);
+            if (valuePresent)
+            {
+                return _environment.GetAt(distance, name.Lexeme);
+            }
+            else
+            {
+                return Globals.Get(name);
+            }
         }
 
         private static bool IsTruthy(object value)

@@ -49,5 +49,21 @@ namespace LoxDotNet.Interpreting
 
             throw new RuntimeException(name, $"Undefined variable '{name.Lexeme}'.");
         }
+
+        internal object GetAt(int distance, string name)
+        {
+            return Ancestor(distance)._values[name];
+        }
+
+        private Environment Ancestor(int distance)
+        {
+            var environment = this;
+            for (var i = 0; i < distance; i++)
+            {
+                environment = environment._enclosing;
+            }
+
+            return environment;
+        }
     }
 }
