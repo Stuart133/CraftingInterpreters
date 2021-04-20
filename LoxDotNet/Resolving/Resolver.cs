@@ -16,6 +16,14 @@ namespace LoxDotNet.Resolving
             _interpreter = interpreter;
         }
 
+        public void Resolve(List<Stmt> statements)
+        {
+            foreach (var statement in statements)
+            {
+                Resolve(statement);
+            }
+        }
+
         public object VisitAssignExpr(Expr.Assign expr)
         {
             Resolve(expr.value);
@@ -184,14 +192,6 @@ namespace LoxDotNet.Resolving
         private void EndScope()
         {
             _scopes.Pop();
-        }
-
-        private void Resolve(List<Stmt> statements)
-        {
-            foreach (var statement in statements)
-            {
-                Resolve(statement);
-            }
         }
 
         private void Resolve(Stmt stmt)

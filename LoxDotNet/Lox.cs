@@ -1,5 +1,6 @@
 ﻿using LoxDotNet.Interpreting;
 using LoxDotNet.Parsing;
+using LoxDotNet.Resolving;
 using LoxDotNet.Scanning;
 using System;
 using System.Collections.Generic;
@@ -47,11 +48,9 @@ namespace LoxDotNet
                 return;
             }
 
-            //var printer = new AstPrinter();
-            //foreach(var statement in printer.Print(statements))
-            //{
-            //    Console.WriteLine(statement);
-            //}
+            // Static resolver pass
+            var resolver = new Resolver(_interpreter);
+            resolver.Resolve(statements);
 
             _interpreter.Interpret(statements);
         }
