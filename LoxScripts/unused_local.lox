@@ -1,0 +1,4 @@
+fun main() {
+  var a = "yeah";
+  var b;
+}

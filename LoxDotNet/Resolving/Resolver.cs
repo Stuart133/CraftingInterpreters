@@ -9,7 +9,7 @@ namespace LoxDotNet.Resolving
     class Resolver : Expr.IVisitor<object>, Stmt.IVisitor<object>
     {
         private readonly Interpreter _interpreter;
-        private readonly Stack<Dictionary<string, bool>> _scopes = new Stack<Dictionary<string, bool>>();
+        private readonly Stack<Dictionary<string, Variable>> _scopes = new Stack<Dictionary<string, Variable>>();
         private FunctionType _currentFunction = FunctionType.None;
 
         internal Resolver(Interpreter interpreter)
@@ -28,7 +28,7 @@ namespace LoxDotNet.Resolving
         public object VisitAssignExpr(Expr.Assign expr)
         {
             Resolve(expr.value);
-            ResolveLocal(expr, expr.name);
+            ResolveLocal(expr, expr.name, false);
 
             return null;
         }
@@ -161,12 +161,12 @@ namespace LoxDotNet.Resolving
         public object VisitVariableExpr(Expr.Variable expr)
         {
             var isInScope = _scopes.Peek().TryGetValue(expr.name.Lexeme, out var value);
-            if (_scopes.Count != 0 && isInScope && !value)
+            if (_scopes.Count != 0 && isInScope && value.State == VariableState.Declared)
             {
                 Lox.Error(expr.name, "Can't read local variable in its own initializer.");
             }
 
-            ResolveLocal(expr, expr.name);
+            ResolveLocal(expr, expr.name, true);
 
             return null;
         }
@@ -193,12 +193,21 @@ namespace LoxDotNet.Resolving
 
         private void BeginScope()
         {
-            _scopes.Push(new Dictionary<string, bool>());
+            _scopes.Push(new Dictionary<string, Variable>());
         }
 
         private void EndScope()
         {
-            _scopes.Pop();
+            var scope = _scopes.Pop();
+
+            // Check all variables have been used
+            foreach (var variable in scope.Values)
+            {
+                if (variable.State != VariableState.Read)
+                {
+                    Lox.Error(variable.Name, "Local variable not used");
+                }
+            }
         }
 
         private void Resolve(Stmt stmt)
@@ -211,13 +220,19 @@ namespace LoxDotNet.Resolving
             expr.Accept(this);
         }
 
-        private void ResolveLocal(Expr expr, Token name)
+        private void ResolveLocal(Expr expr, Token name, bool isRead)
         {
             for (var i = _scopes.Count - 1; i >= 0; i--)
             {
                 if (_scopes.ElementAt(i).ContainsKey(name.Lexeme))
                 {
                     _interpreter.Resolve(expr, _scopes.Count - 1 - i);
+
+                    if (isRead)
+                    {
+                        _scopes.ElementAt(i)[name.Lexeme].State = VariableState.Read;
+                    }
+
                     return;
                 }
             }
@@ -254,7 +269,7 @@ namespace LoxDotNet.Resolving
                 Lox.Error(name, "Already variable with this name in scope.");
             }
 
-            scope[name.Lexeme] = false;
+            scope[name.Lexeme] = new Variable(name, VariableState.Declared);
         }
 
         private void Define(Token name)
@@ -264,7 +279,7 @@ namespace LoxDotNet.Resolving
                 return;
             }
 
-            _scopes.Peek()[name.Lexeme] = true;
+            _scopes.Peek()[name.Lexeme].State = VariableState.Defined;
         }
     }
 }
