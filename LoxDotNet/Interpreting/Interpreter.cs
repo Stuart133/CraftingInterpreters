@@ -44,12 +44,14 @@ namespace LoxDotNet.Interpreting
             var valuePresent = _locals.TryGetValue(expr, out var distance);
             if (valuePresent)
             {
-                return _environment.AssignAt(distance, expr.name);
+                _environment.AssignAt(distance, expr.name, value);
             }
             else
             {
-                return Globals.Assign(expr.name, value);
+                Globals.Assign(expr.name, value);
             }
+
+            return value;
         }
 
         public object VisitBinaryExpr(Expr.Binary expr)

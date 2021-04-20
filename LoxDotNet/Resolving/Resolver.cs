@@ -154,7 +154,8 @@ namespace LoxDotNet.Resolving
 
         public object VisitVariableExpr(Expr.Variable expr)
         {
-            if (_scopes.Count != 0 && _scopes.Peek()[expr.name.Lexeme] == false)
+            var isInScope = _scopes.Peek().TryGetValue(expr.name.Lexeme, out var value);
+            if (_scopes.Count != 0 && isInScope && !value)
             {
                 Lox.Error(expr.name, "Can't read local variable in its own initializer.");
             }
@@ -236,7 +237,13 @@ namespace LoxDotNet.Resolving
                 return;
             }
 
-            _scopes.Peek()[name.Lexeme] = false;
+            var scope = _scopes.Peek();
+            if (scope.ContainsKey(name.Lexeme))
+            {
+                Lox.Error(name, "Already variable with this name in scope.");
+            }
+
+            scope[name.Lexeme] = false;
         }
 
         private void Define(Token name)
