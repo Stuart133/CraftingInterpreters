@@ -36,13 +36,15 @@ namespace LoxDotNet
 
         private static void Run(string source)
         {
+            // Scan source into tokens
             var scanner = new Scanner(source);
             List<Token> tokens = scanner.ScanTokens();
 
+            // Parse tokens
             var parser = new Parser(tokens);
             var statements = parser.Parse();
 
-            // Stop if there was a syntax error
+            // Stop if there were any parsing errors
             if (_hadError)
             {
                 return;
@@ -52,6 +54,13 @@ namespace LoxDotNet
             var resolver = new Resolver(_interpreter);
             resolver.Resolve(statements);
 
+            // Stop if there were any resolver errors
+            if (_hadError)
+            {
+                return;
+            }
+
+            // Run program
             _interpreter.Interpret(statements);
         }
 
