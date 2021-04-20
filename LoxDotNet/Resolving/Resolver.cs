@@ -10,6 +10,7 @@ namespace LoxDotNet.Resolving
     {
         private readonly Interpreter _interpreter;
         private readonly Stack<Dictionary<string, bool>> _scopes = new Stack<Dictionary<string, bool>>();
+        private FunctionType _currentFunction = FunctionType.None;
 
         internal Resolver(Interpreter interpreter)
         {
@@ -80,7 +81,7 @@ namespace LoxDotNet.Resolving
 
         public object VisitFunctionExpr(Expr.Function expr)
         {
-            ResolveFunction(expr);
+            ResolveFunction(expr, FunctionType.Function);
 
             return null;
         }
@@ -90,7 +91,7 @@ namespace LoxDotNet.Resolving
             Declare(stmt.name);
             Define(stmt.name);
 
-            ResolveFunction(stmt.function);
+            Resolve(stmt.function);
 
             return null;
         }
@@ -137,6 +138,11 @@ namespace LoxDotNet.Resolving
 
         public object VisitReturnStmt(Stmt.Return stmt)
         {
+            if (_currentFunction == FunctionType.None)
+            {
+                Lox.Error(stmt.keyword, "Can't return from top-level code");
+            }
+
             if (stmt.value != null)
             {
                 Resolve(stmt.value);
@@ -217,8 +223,11 @@ namespace LoxDotNet.Resolving
             }
         }
 
-        private void ResolveFunction(Expr.Function function)
+        private void ResolveFunction(Expr.Function function, FunctionType functionType)
         {
+            var enclosingFunction = _currentFunction;
+            _currentFunction = functionType;
+
             BeginScope();
             foreach (var parameter in function.parameters)
             {
@@ -228,6 +237,8 @@ namespace LoxDotNet.Resolving
 
             Resolve(function.body);
             EndScope();
+
+            _currentFunction = enclosingFunction;
         }
 
         private void Declare(Token name)
