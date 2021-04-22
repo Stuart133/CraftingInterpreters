@@ -10,6 +10,7 @@ namespace LoxDotNet.Parsing
 		public interface IVisitor<T>
 		{
 			T VisitBlockStmt(Block stmt);
+			T VisitClassStmt(Class stmt);
 			T VisitBreakStmt(Break stmt);
 			T VisitExpressionStmt(Expression stmt);
 			T VisitFunctionStmt(Function stmt);
@@ -33,6 +34,23 @@ namespace LoxDotNet.Parsing
 			}
 
 			internal List<Stmt> statements { get; }
+		}
+
+		public class Class : Stmt
+		{
+			internal Class(Token name, List<Stmt.Function> methods)
+			{
+				this.name = name;
+				this.methods = methods;
+			}
+
+			internal override T Accept<T>(IVisitor<T> visitor)
+			{
+				return visitor.VisitClassStmt(this);
+			}
+
+			internal Token name { get; }
+			internal List<Stmt.Function> methods { get; }
 		}
 
 		public class Break : Stmt
