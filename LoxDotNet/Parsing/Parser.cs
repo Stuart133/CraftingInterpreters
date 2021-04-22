@@ -36,6 +36,11 @@ namespace LoxDotNet.Parsing
                     return FunctionStatement("function");
                 }
 
+                if (Match(CLASS))
+                {
+                    return ClassDeclaration();
+                }
+
                 if (Match(VAR))
                 {
                     return VarDeclaration();
@@ -48,6 +53,22 @@ namespace LoxDotNet.Parsing
                 Synchronize();
                 return null;
             }
+        }
+
+        private Stmt ClassDeclaration()
+        {
+            var name = Consume(IDENTIFIER, "Expect class name.");
+            Consume(LEFT_BRACE, "Expect '{' before class body.");
+
+            var methods = new List<Stmt.Function>();
+            while (!Check(RIGHT_BRACE) && !IsAtEnd())
+            {
+                methods.Add(FunctionStatement("method"));
+            }
+
+            Consume(RIGHT_BRACE, "Expect '}' after class body.");
+
+            return new Stmt.Class(name, methods);
         }
 
         private Stmt VarDeclaration()
@@ -179,7 +200,7 @@ namespace LoxDotNet.Parsing
             return new Stmt.Expression(expr);
         }
 
-        private Stmt FunctionStatement(string kind)
+        private Stmt.Function FunctionStatement(string kind)
         {
             var name = Consume(IDENTIFIER, $"Expect {kind} name.");
             var function = Function(kind);
