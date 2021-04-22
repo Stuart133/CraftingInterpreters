@@ -87,6 +87,13 @@ namespace LoxDotNet.Resolving
             return null;
         }
 
+        public object VisitGetExpr(Expr.Get expr)
+        {
+            Resolve(expr.obj);
+
+            return null;
+        }
+
         public object VisitFunctionExpr(Expr.Function expr)
         {
             ResolveFunction(expr, FunctionType.Function);

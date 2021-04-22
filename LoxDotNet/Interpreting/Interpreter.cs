@@ -135,6 +135,17 @@ namespace LoxDotNet.Interpreting
             return new LoxFunction(null, expr, _environment);
         }
 
+        public object VisitGetExpr(Expr.Get expr)
+        {
+            var obj = Evaluate(expr.obj);
+            if (obj is LoxInstance li)
+            {
+                return li.Get(expr.name);
+            }
+
+            throw new RuntimeException(expr.name, "Only instances have properties");
+        }
+
         public object VisitGroupingExpr(Expr.Grouping expr)
         {
             return Evaluate(expr.expression);
