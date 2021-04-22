@@ -98,9 +98,9 @@ namespace LoxDotNet.Parsing
 
 		public class Get : Expr
 		{
-			internal Get(Expr object, Token name)
+			internal Get(Expr obj, Token name)
 			{
-				this.object = object;
+				this.obj = obj;
 				this.name = name;
 			}
 
@@ -109,7 +109,7 @@ namespace LoxDotNet.Parsing
 				return visitor.VisitGetExpr(this);
 			}
 
-			internal Expr object { get; }
+			internal Expr obj { get; }
 			internal Token name { get; }
 		}
 
