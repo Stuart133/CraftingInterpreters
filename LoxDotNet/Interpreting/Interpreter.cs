@@ -194,6 +194,16 @@ namespace LoxDotNet.Interpreting
             return null;
         }
 
+        public object VisitClassStmt(Stmt.Class stmt)
+        {
+            _environment.Define(stmt.name.Lexeme, null);
+            
+            var clas = new LoxClass(stmt.name.Lexeme);
+            _environment.Assign(stmt.name.Lexeme, clas);
+
+            return null;
+        }
+
         public object VisitBreakStmt(Stmt.Break stmt)
         {
             throw new BreakException();
