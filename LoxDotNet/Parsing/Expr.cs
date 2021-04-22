@@ -13,6 +13,7 @@ namespace LoxDotNet.Parsing
 			T VisitBinaryExpr(Binary expr);
 			T VisitCallExpr(Call expr);
 			T VisitConditionalExpr(Conditional expr);
+			T VisitGetExpr(Get expr);
 			T VisitFunctionExpr(Function expr);
 			T VisitGroupingExpr(Grouping expr);
 			T VisitLiteralExpr(Literal expr);
@@ -93,6 +94,23 @@ namespace LoxDotNet.Parsing
 			internal Expr ifExpr { get; }
 			internal Expr thenBranch { get; }
 			internal Expr elseBranch { get; }
+		}
+
+		public class Get : Expr
+		{
+			internal Get(Expr object, Token name)
+			{
+				this.object = object;
+				this.name = name;
+			}
+
+			internal override T Accept<T>(IVisitor<T> visitor)
+			{
+				return visitor.VisitGetExpr(this);
+			}
+
+			internal Expr object { get; }
+			internal Token name { get; }
 		}
 
 		public class Function : Expr
