@@ -168,8 +168,7 @@ namespace LoxDotNet.Resolving
 
         public object VisitVariableExpr(Expr.Variable expr)
         {
-            var isInScope = _scopes.Peek().TryGetValue(expr.name.Lexeme, out var value);
-            if (_scopes.Count != 0 && isInScope && value.State == VariableState.Declared)
+            if (_scopes.Count != 0 && _scopes.Peek().TryGetValue(expr.name.Lexeme, out var value) && value.State == VariableState.Declared)
             {
                 Lox.Error(expr.name, "Can't read local variable in its own initializer.");
             }

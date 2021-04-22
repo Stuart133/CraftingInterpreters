@@ -199,7 +199,7 @@ namespace LoxDotNet.Interpreting
             _environment.Define(stmt.name.Lexeme, null);
             
             var clas = new LoxClass(stmt.name.Lexeme);
-            _environment.Assign(stmt.name.Lexeme, clas);
+            _environment.Assign(stmt.name, clas);
 
             return null;
         }

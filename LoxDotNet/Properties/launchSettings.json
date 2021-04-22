@@ -2,7 +2,7 @@
   "profiles": {
     "LoxDotNet": {
       "commandName": "Project",
-      "commandLineArgs": ".\\LoxScripts\\unused_local.lox",
+      "commandLineArgs": ".\\LoxScripts\\classes.lox",
       "workingDirectory": "C:\\Users\\Stuart\\source\\repos\\CraftingInterpreters"
     },
     "LoxDotNetREPL": {
