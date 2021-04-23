@@ -178,6 +178,20 @@ namespace LoxDotNet.Interpreting
             return Evaluate(expr.right);
         }
 
+        public object VisitSetExpr(Expr.Set expr)
+        {
+            var obj = Evaluate(expr.obj);
+
+            if (obj is LoxInstance li)
+            {
+                var value = Evaluate(expr.value);
+                li.Set(expr.name, value);
+                return value;
+            }
+
+            throw new RuntimeException(expr.name, "Only instances have fields.");
+        }
+
         public object VisitVariableExpr(Expr.Variable expr)
         {
             return LookUpVariable(expr.name, expr);

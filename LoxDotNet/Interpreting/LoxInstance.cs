@@ -23,6 +23,11 @@ namespace LoxDotNet.Interpreting
             throw new RuntimeException(name, $"Undefined property '{name.Lexeme}'.");
         }
 
+        internal void Set(Token name, object value)
+        {
+            _fields[name.Lexeme] = value;
+        }
+
         public override string ToString()
         {
             return $"{_loxClass.Name} instance";
