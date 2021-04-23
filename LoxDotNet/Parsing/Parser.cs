@@ -278,8 +278,11 @@ namespace LoxDotNet.Parsing
 
                 if (expr is Expr.Variable varExpr)
                 {
-                    var name = varExpr.name;
-                    return new Expr.Assign(name, value);
+                    return new Expr.Assign(varExpr.name, value);
+                }
+                else if (expr is Expr.Get getExpr)
+                {
+                    return new Expr.Set(getExpr.obj, getExpr.name, value);
                 }
 
                 Error(equals, "Invalid assignment target");
@@ -396,8 +399,8 @@ namespace LoxDotNet.Parsing
             if (Match(FALSE)) return new Expr.Literal(false);
             if (Match(TRUE)) return new Expr.Literal(true);
             if (Match(NIL)) return new Expr.Literal(null);
-            
-            if(Match(FUN))
+
+            if (Match(FUN))
             {
                 return Function("function");
             }
