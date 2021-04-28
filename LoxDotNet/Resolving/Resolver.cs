@@ -55,6 +55,12 @@ namespace LoxDotNet.Resolving
             Declare(stmt.name);
             Define(stmt.name);
 
+            foreach (var method in stmt.methods)
+            {
+                var declaration = FunctionType.Method;
+                ResolveFunction(method.function, declaration);
+            }
+
             return null;
         }
 

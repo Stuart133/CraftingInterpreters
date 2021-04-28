@@ -222,7 +222,7 @@ namespace LoxDotNet.Interpreting
         public object VisitClassStmt(Stmt.Class stmt)
         {
             _environment.Define(stmt.name.Lexeme, null);
-            
+          
             var clas = new LoxClass(stmt.name.Lexeme);
             _environment.Assign(stmt.name, clas);
 
