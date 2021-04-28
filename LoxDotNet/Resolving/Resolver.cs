@@ -55,11 +55,16 @@ namespace LoxDotNet.Resolving
             Declare(stmt.name);
             Define(stmt.name);
 
+            BeginScope();
+            _scopes.Peek()["this"] = new Variable(stmt.name, VariableState.Read);
+
             foreach (var method in stmt.methods)
             {
                 var declaration = FunctionType.Method;
                 ResolveFunction(method.function, declaration);
             }
+
+            EndScope();
 
             return null;
         }
@@ -177,6 +182,12 @@ namespace LoxDotNet.Resolving
             Resolve(expr.value);
             Resolve(expr.obj);
 
+            return null;
+        }
+
+        public object VisitThisExpr(Expr.This expr)
+        {
+            ResolveLocal(expr, expr.keyword, true);
             return null;
         }
 
