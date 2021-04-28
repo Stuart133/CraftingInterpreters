@@ -222,8 +222,15 @@ namespace LoxDotNet.Interpreting
         public object VisitClassStmt(Stmt.Class stmt)
         {
             _environment.Define(stmt.name.Lexeme, null);
+
+            var methods = new Dictionary<string, LoxFunction>();
+            foreach (var method in stmt.methods)
+            {
+                var function = new LoxFunction(stmt.name, method.function, _environment);
+                methods[method.name.Lexeme] = function;
+            }
           
-            var clas = new LoxClass(stmt.name.Lexeme);
+            var clas = new LoxClass(stmt.name.Lexeme, methods);
             _environment.Assign(stmt.name, clas);
 
             return null;

@@ -5,10 +5,12 @@ namespace LoxDotNet.Interpreting
     class LoxClass : ICallable
     {
         internal string Name { get; }
+        private Dictionary<string, LoxFunction> _methods;
 
-        internal LoxClass(string name)
+        internal LoxClass(string name, Dictionary<string, LoxFunction> methods)
         {
             Name = name;
+            _methods = methods;
         }
 
         public override string ToString()
