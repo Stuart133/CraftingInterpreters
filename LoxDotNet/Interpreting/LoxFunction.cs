@@ -42,6 +42,13 @@ namespace LoxDotNet.Interpreting
             return null;
         }
 
+        public LoxFunction Bind(LoxInstance loxInstance)
+        {
+            var environment = new Environment(_closure);
+            environment.Define("this", loxInstance);
+            return new LoxFunction(_name, _declaration, environment);
+        }
+
         public override string ToString()
         {
             return $"<fn {_name.Lexeme}>";

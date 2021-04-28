@@ -238,15 +238,6 @@ namespace LoxDotNet.Resolving
         private void EndScope()
         {
             var scope = _scopes.Pop();
-
-            // Check all variables have been used
-            foreach (var variable in scope.Values)
-            {
-                if (variable.State != VariableState.Read)
-                {
-                    Lox.Error(variable.Name, "Local variable not used");
-                }
-            }
         }
 
         private void Resolve(Stmt stmt)
@@ -265,7 +256,7 @@ namespace LoxDotNet.Resolving
             {
                 if (_scopes.ElementAt(i).ContainsKey(name.Lexeme))
                 {
-                    _interpreter.Resolve(expr, _scopes.Count - 1 - i);
+                    _interpreter.Resolve(expr, i);
 
                     if (isRead)
                     {

@@ -13,7 +13,7 @@ namespace LoxDotNet.Interpreting
         private readonly Dictionary<Expr, int> _locals = new Dictionary<Expr, int>();
 
         // Setinal value
-        private static object _uninitialized = new object();
+        private static readonly object _uninitialized = new object();
 
         public Interpreter()
         {
@@ -190,6 +190,11 @@ namespace LoxDotNet.Interpreting
             }
 
             throw new RuntimeException(expr.name, "Only instances have fields.");
+        }
+
+        public object VisitThisExpr(Expr.This expr)
+        {
+            return LookUpVariable(expr.keyword, expr);
         }
 
         public object VisitVariableExpr(Expr.Variable expr)

@@ -23,7 +23,7 @@ namespace LoxDotNet.Interpreting
             var method = _loxClass.FindMethod(name.Lexeme);
             if (method is not null)
             {
-                return method;
+                return method.Bind(this);
             }
 
             throw new RuntimeException(name, $"Undefined property '{name.Lexeme}'.");
