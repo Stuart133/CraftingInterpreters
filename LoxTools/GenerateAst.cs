@@ -33,6 +33,7 @@ namespace LoxTools
                 "Grouping   : Expr expression",
                 "Literal    : object value",
                 "Logical    : Expr left, Token op, Expr right",
+                "This       : Token keyword",
                 "Variable   : Token name",
                 "Unary      : Token op, Expr right"
             });

@@ -400,6 +400,11 @@ namespace LoxDotNet.Parsing
             if (Match(TRUE)) return new Expr.Literal(true);
             if (Match(NIL)) return new Expr.Literal(null);
 
+            if (Match(THIS))
+            {
+                return new Expr.This(Previous());
+            }
+
             if (Match(FUN))
             {
                 return Function("function");
