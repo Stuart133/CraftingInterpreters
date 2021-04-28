@@ -1,0 +1,18 @@
+class Bacon {
+  eat() {
+    print "Crunch Crunch Crunch";
+  }
+
+  hot() {
+    print "Too hot!"
+  }
+}
+
+var bacon = Bacon();
+
+bacon.temp = 4;
+print bacon.temp;
+
+if (bacon.temp < 5) {
+  bacon.eat();
+}

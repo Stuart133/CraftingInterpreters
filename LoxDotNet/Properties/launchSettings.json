@@ -2,7 +2,7 @@
   "profiles": {
     "LoxDotNet": {
       "commandName": "Project",
-      "commandLineArgs": ".\\LoxScripts\\classes.lox",
+      "commandLineArgs": ".\\LoxScripts\\bacon.lox",
       "workingDirectory": "C:\\Users\\Stuart\\source\\repos\\CraftingInterpreters"
     },
     "LoxDotNetREPL": {

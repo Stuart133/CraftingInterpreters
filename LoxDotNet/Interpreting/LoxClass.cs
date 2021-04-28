@@ -28,5 +28,15 @@ namespace LoxDotNet.Interpreting
             var instance = new LoxInstance(this);
             return instance;
         }
+
+        internal LoxFunction FindMethod(string name)
+        {
+            if (_methods.ContainsKey(name))
+            {
+                return _methods[name];
+            }
+
+            return null;
+        }
     }
 }
