@@ -38,6 +38,11 @@ namespace LoxDotNet.Interpreting
             }
             catch (Return returnValue)
             {
+                if (_isInitializer)
+                {
+                    return _closure.GetAt(0, "this");
+                }
+
                 return returnValue.Value;
             }
 

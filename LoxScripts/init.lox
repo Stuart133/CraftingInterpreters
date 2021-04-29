@@ -4,7 +4,16 @@ class Foo {
   }
 }
 
+class Bar {
+  init() {
+    // Another odd one
+    return;
+  }
+}
+
 var foo = Foo();
+var bar = Bar();
 
 // A weird edge case
 print foo.init();
+print bar.init();

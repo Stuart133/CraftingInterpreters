@@ -180,7 +180,7 @@ namespace LoxDotNet.Resolving
                 Lox.Error(stmt.keyword, "Can't return from top-level code");
             }
 
-            if (_currentFunction == FunctionType.Initializer)
+            if (_currentFunction == FunctionType.Initializer && stmt.value is not null)
             {
                 Lox.Error(stmt.keyword, "Can't return a value from an initializer.");
             }
