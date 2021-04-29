@@ -1,0 +1,8 @@
+class MyClass {
+  hello() {
+    print this.helloWorld;
+  }
+}
+
+var obj = MyClass();
+this.helloWorld = "Hello world";
