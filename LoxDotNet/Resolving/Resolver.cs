@@ -65,6 +65,11 @@ namespace LoxDotNet.Resolving
             foreach (var method in stmt.methods)
             {
                 var declaration = FunctionType.Method;
+                if (method.name.Lexeme == "init")
+                {
+                    declaration = FunctionType.Initializer;
+                }
+
                 ResolveFunction(method.function, declaration);
             }
 
@@ -173,6 +178,11 @@ namespace LoxDotNet.Resolving
             if (_currentFunction == FunctionType.None)
             {
                 Lox.Error(stmt.keyword, "Can't return from top-level code");
+            }
+
+            if (_currentFunction == FunctionType.Initializer)
+            {
+                Lox.Error(stmt.keyword, "Can't return a value from an initializer.");
             }
 
             if (stmt.value != null)

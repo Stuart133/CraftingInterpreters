@@ -132,7 +132,7 @@ namespace LoxDotNet.Interpreting
 
         public object VisitFunctionExpr(Expr.Function expr)
         {
-            return new LoxFunction(null, expr, _environment);
+            return new LoxFunction(null, expr, _environment, false);
         }
 
         public object VisitGetExpr(Expr.Get expr)
@@ -231,7 +231,7 @@ namespace LoxDotNet.Interpreting
             var methods = new Dictionary<string, LoxFunction>();
             foreach (var method in stmt.methods)
             {
-                var function = new LoxFunction(stmt.name, method.function, _environment);
+                var function = new LoxFunction(stmt.name, method.function, _environment, method.name.Lexeme == "init");
                 methods[method.name.Lexeme] = function;
             }
           
@@ -254,7 +254,7 @@ namespace LoxDotNet.Interpreting
 
         public object VisitFunctionStmt(Stmt.Function stmt)
         {
-            var function = new LoxFunction(stmt.name, stmt.function, _environment);
+            var function = new LoxFunction(stmt.name, stmt.function, _environment, false);
             _environment.Define(stmt.name.Lexeme, function);
             return null;
         }

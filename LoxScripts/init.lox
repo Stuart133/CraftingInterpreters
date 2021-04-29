@@ -1,0 +1,10 @@
+class Foo {
+  init() {
+    print this;
+  }
+}
+
+var foo = Foo();
+
+// A weird edge case
+print foo.init();

@@ -20,12 +20,21 @@ namespace LoxDotNet.Interpreting
 
         public int Arity()
         {
-            return 0;
+            var initializer = FindMethod("init");
+
+            return initializer?.Arity() ?? 0;
         }
 
         public object Call(Interpreter interpreter, List<object> arguments)
         {
             var instance = new LoxInstance(this);
+            var initializer = FindMethod("init");
+
+            if (initializer is not null)
+            {
+                initializer.Bind(instance).Call(interpreter, arguments);
+            }
+
             return instance;
         }
 
