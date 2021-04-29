@@ -11,6 +11,7 @@ namespace LoxDotNet.Resolving
         private readonly Interpreter _interpreter;
         private readonly Stack<Dictionary<string, Variable>> _scopes = new Stack<Dictionary<string, Variable>>();
         private FunctionType _currentFunction = FunctionType.None;
+        private ClassType _currentClass = ClassType.None;
 
         internal Resolver(Interpreter interpreter)
         {
@@ -52,6 +53,9 @@ namespace LoxDotNet.Resolving
 
         public object VisitClassStmt(Stmt.Class stmt)
         {
+            var enclosingClass = _currentClass;
+            _currentClass = ClassType.Class;
+
             Declare(stmt.name);
             Define(stmt.name);
 
@@ -65,6 +69,8 @@ namespace LoxDotNet.Resolving
             }
 
             EndScope();
+
+            _currentClass = enclosingClass;
 
             return null;
         }
@@ -187,6 +193,11 @@ namespace LoxDotNet.Resolving
 
         public object VisitThisExpr(Expr.This expr)
         {
+            if (_currentClass == ClassType.None)
+            {
+                Lox.Error(expr.keyword, "Can't use 'this' keyword outside of a class");
+            }
+
             ResolveLocal(expr, expr.keyword, true);
             return null;
         }
