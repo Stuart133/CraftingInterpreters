@@ -63,7 +63,7 @@ namespace LoxDotNet.Resolving
             {
                 if (stmt.name.Lexeme == stmt.superclass.name.Lexeme)
                 {
-                    Lox.Error("A class can't inherit from itself.");
+                    Lox.Error(stmt.superclass.name, "A class can't inherit from itself.");
                 }
 
                 Resolve(stmt.superclass);

@@ -245,7 +245,7 @@ namespace LoxDotNet.Interpreting
                 methods[method.name.Lexeme] = function;
             }
           
-            var clas = new LoxClass(stmt.name.Lexeme, methods);
+            var clas = new LoxClass(stmt.name.Lexeme, superclass as LoxClass, methods);
             _environment.Assign(stmt.name, clas);
 
             return null;
