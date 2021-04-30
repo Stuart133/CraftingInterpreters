@@ -408,6 +408,15 @@ namespace LoxDotNet.Parsing
             if (Match(TRUE)) return new Expr.Literal(true);
             if (Match(NIL)) return new Expr.Literal(null);
 
+            if (Match(SUPER))
+            {
+                var keyword = Previous();
+                Consume(DOT, "Expect '.' after 'super'.");
+                var method = Consume(IDENTIFIER, "Expect superclass method name.");
+
+                return new Expr.Super(keyword, method);
+            }
+
             if (Match(THIS))
             {
                 return new Expr.This(Previous());
