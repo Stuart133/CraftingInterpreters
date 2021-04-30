@@ -5,11 +5,14 @@ namespace LoxDotNet.Interpreting
     class LoxClass : ICallable
     {
         internal string Name { get; }
-        private Dictionary<string, LoxFunction> _methods;
 
-        internal LoxClass(string name, Dictionary<string, LoxFunction> methods)
+        private readonly LoxClass _superclass;
+        private readonly Dictionary<string, LoxFunction> _methods;
+
+        internal LoxClass(string name, LoxClass superclass, Dictionary<string, LoxFunction> methods)
         {
             Name = name;
+            _superclass = superclass;
             _methods = methods;
         }
 

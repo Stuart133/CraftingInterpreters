@@ -59,6 +59,16 @@ namespace LoxDotNet.Resolving
             Declare(stmt.name);
             Define(stmt.name);
 
+            if (stmt.superclass is not null)
+            {
+                if (stmt.name.Lexeme == stmt.superclass.name.Lexeme)
+                {
+                    Lox.Error("A class can't inherit from itself.");
+                }
+
+                Resolve(stmt.superclass);
+            }
+
             BeginScope();
             _scopes.Peek()["this"] = new Variable(stmt.name, VariableState.Read);
 

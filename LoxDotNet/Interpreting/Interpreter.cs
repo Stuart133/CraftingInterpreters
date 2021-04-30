@@ -226,6 +226,16 @@ namespace LoxDotNet.Interpreting
 
         public object VisitClassStmt(Stmt.Class stmt)
         {
+            object superclass = null;
+            if (stmt.superclass is not null)
+            {
+                superclass = Evaluate(stmt.superclass);
+                if (superclass is not LoxClass)
+                {
+                    throw new RuntimeException(stmt.superclass.name, "Superclass must be a class.");
+                }
+            }
+
             _environment.Define(stmt.name.Lexeme, null);
 
             var methods = new Dictionary<string, LoxFunction>();
