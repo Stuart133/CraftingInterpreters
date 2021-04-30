@@ -48,6 +48,11 @@ namespace LoxDotNet.Interpreting
                 return _methods[name];
             }
 
+            if (_superclass is not null)
+            {
+                return _superclass.FindMethod(name);
+            }
+
             return null;
         }
     }
