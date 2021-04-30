@@ -29,6 +29,7 @@ namespace LoxTools
                 "Conditional: Expr ifExpr, Expr thenBranch, Expr elseBranch",
                 "Get        : Expr obj, Token name",
                 "Set        : Expr obj, Token name, Expr value",
+                "Super      : Token keyword, Token method",
                 "Function   : List<Token> parameters, List<Stmt> body",
                 "Grouping   : Expr expression",
                 "Literal    : object value",

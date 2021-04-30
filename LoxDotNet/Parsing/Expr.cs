@@ -15,6 +15,7 @@ namespace LoxDotNet.Parsing
 			T VisitConditionalExpr(Conditional expr);
 			T VisitGetExpr(Get expr);
 			T VisitSetExpr(Set expr);
+			T VisitSuperExpr(Super expr);
 			T VisitFunctionExpr(Function expr);
 			T VisitGroupingExpr(Grouping expr);
 			T VisitLiteralExpr(Literal expr);
@@ -132,6 +133,23 @@ namespace LoxDotNet.Parsing
 			internal Expr obj { get; }
 			internal Token name { get; }
 			internal Expr value { get; }
+		}
+
+		public class Super : Expr
+		{
+			internal Super(Token keyword, Token method)
+			{
+				this.keyword = keyword;
+				this.method = method;
+			}
+
+			internal override T Accept<T>(IVisitor<T> visitor)
+			{
+				return visitor.VisitSuperExpr(this);
+			}
+
+			internal Token keyword { get; }
+			internal Token method { get; }
 		}
 
 		public class Function : Expr
