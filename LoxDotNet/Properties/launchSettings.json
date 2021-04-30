@@ -2,7 +2,7 @@
   "profiles": {
     "LoxDotNet": {
       "commandName": "Project",
-      "commandLineArgs": ".\\LoxScripts\\inheritance.lox",
+      "commandLineArgs": ".\\LoxScripts\\bad_super.lox",
       "workingDirectory": "C:\\Users\\Stuart\\source\\repos\\CraftingInterpreters"
     },
     "LoxDotNetREPL": {

@@ -66,6 +66,7 @@ namespace LoxDotNet.Resolving
                     Lox.Error(stmt.superclass.name, "A class can't inherit from itself.");
                 }
 
+                _currentClass = ClassType.Subclass;
                 Resolve(stmt.superclass);
 
                 BeginScope();
@@ -221,6 +222,15 @@ namespace LoxDotNet.Resolving
 
         public object VisitSuperExpr(Expr.Super expr)
         {
+            if (_currentClass == ClassType.None)
+            {
+                Lox.Error(expr.keyword, "Can't use 'super' outside of a class");
+            }
+            if (_currentClass == ClassType.Class)
+            {
+                Lox.Error(expr.keyword, "Can't use 'super' in a class with no superclass");
+            }
+
             ResolveLocal(expr, expr.keyword, true);
 
             return null;
