@@ -38,9 +38,10 @@ namespace LoxDotNet.Parsing
 
 		public class Class : Stmt
 		{
-			internal Class(Token name, List<Stmt.Function> methods)
+			internal Class(Token name, Expr.Variable superclass, List<Stmt.Function> methods)
 			{
 				this.name = name;
+				this.superclass = superclass;
 				this.methods = methods;
 			}
 
@@ -50,6 +51,7 @@ namespace LoxDotNet.Parsing
 			}
 
 			internal Token name { get; }
+			internal Expr.Variable superclass { get; }
 			internal List<Stmt.Function> methods { get; }
 		}
 
