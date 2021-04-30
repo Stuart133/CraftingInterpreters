@@ -67,7 +67,10 @@ namespace LoxDotNet.Resolving
                 }
 
                 Resolve(stmt.superclass);
-            }
+
+                BeginScope();
+                _scopes.Peek()["super"] = new Variable(stmt.name, VariableState.Read);
+            }            
 
             BeginScope();
             _scopes.Peek()["this"] = new Variable(stmt.name, VariableState.Read);
@@ -84,6 +87,11 @@ namespace LoxDotNet.Resolving
             }
 
             EndScope();
+
+            if (stmt.superclass is not null)
+            {
+                EndScope();
+            }
 
             _currentClass = enclosingClass;
 
@@ -207,6 +215,13 @@ namespace LoxDotNet.Resolving
         {
             Resolve(expr.value);
             Resolve(expr.obj);
+
+            return null;
+        }
+
+        public object VisitSuperExpr(Expr.Super expr)
+        {
+            ResolveLocal(expr, expr.keyword, true);
 
             return null;
         }

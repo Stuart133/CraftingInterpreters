@@ -26,7 +26,7 @@ namespace LoxDotNet.Interpreting
         {
             try
             {
-                foreach(var statement in statements)
+                foreach (var statement in statements)
                 {
                     Execute(statement);
                 }
@@ -104,7 +104,7 @@ namespace LoxDotNet.Interpreting
             {
                 args.Add(Evaluate(arg));
             }
-            
+
             if (callee is ICallable function)
             {
                 if (args.Count != function.Arity())
@@ -112,7 +112,7 @@ namespace LoxDotNet.Interpreting
                     throw new RuntimeException(expr.paren, $"Expected {function.Arity()} arguments but got {args.Count}.");
                 }
 
-               return function.Call(this, args);
+                return function.Call(this, args);
             }
 
             throw new RuntimeException(expr.paren, "Can only call functions and classes");
@@ -192,6 +192,23 @@ namespace LoxDotNet.Interpreting
             throw new RuntimeException(expr.name, "Only instances have fields.");
         }
 
+        public object VisitSuperExpr(Expr.Super expr)
+        {
+            var distance = _locals[expr];
+            var superClass = _environment.GetAt(distance, "super") as LoxClass;
+
+            var obj = _environment.GetAt(distance - 1, "this") as LoxInstance;
+
+            var method = superClass.FindMethod(expr.method.Lexeme);
+
+            if (method == null)
+            {
+                throw new RuntimeException(expr.method, "Undefined property '" + expr.method.Lexeme + "'.");
+            }
+
+            return method.Bind(obj);
+        }
+
         public object VisitThisExpr(Expr.This expr)
         {
             return LookUpVariable(expr.keyword, expr);
@@ -238,14 +255,26 @@ namespace LoxDotNet.Interpreting
 
             _environment.Define(stmt.name.Lexeme, null);
 
+            if (stmt.superclass is not null)
+            {
+                _environment = new Environment(_environment);
+                _environment.Define("super", superclass);
+            }
+
             var methods = new Dictionary<string, LoxFunction>();
             foreach (var method in stmt.methods)
             {
                 var function = new LoxFunction(stmt.name, method.function, _environment, method.name.Lexeme == "init");
                 methods[method.name.Lexeme] = function;
             }
-          
+
             var clas = new LoxClass(stmt.name.Lexeme, superclass as LoxClass, methods);
+
+            if (stmt.superclass is not null)
+            {
+                _environment = _environment.Enclosing;
+            }
+
             _environment.Assign(stmt.name, clas);
 
             return null;
@@ -424,7 +453,7 @@ namespace LoxDotNet.Interpreting
             if (operand is not double)
             {
                 throw new RuntimeException(op, "Operand must be a number");
-            }    
+            }
         }
 
         private static void CheckNumberOperands(Token op, object left, object right)
@@ -432,7 +461,7 @@ namespace LoxDotNet.Interpreting
             if (left is not double || right is not double)
             {
                 throw new RuntimeException(op, "Operands must be numbers");
-            }    
+            }
         }
 
         private static string Stringify(object value)

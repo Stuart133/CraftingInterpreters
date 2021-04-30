@@ -9,6 +9,7 @@ class BostonCream < Doughnut {
     super.cook();
     print "Pipe full of custard and coat with chocolate.";
   }
+}
 
 var boston = BostonCream();
 boston.cook();
